@@ -10,7 +10,7 @@ export default function InputField({ isError, ...props }: InputFieldProps) {
 }
 
 const Input = styled.input<{ $isError: boolean }>`
-  width: 100%;
+  width: clamp(72px, 100%, 100%);
   height: 32px;
   padding: 8px;
   border: 1px solid ${({ $isError }) => ($isError ? '#FF3D3D' : '#ACACAC')};
