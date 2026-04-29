@@ -1,10 +1,15 @@
 import styled from '@emotion/styled';
+import { ComponentProps } from 'react';
 
-export default function Label({ children }: { children: React.ReactNode }) {
-  return <Text>{children}</Text>;
+interface LabelProps extends Omit<ComponentProps<'label'>, 'children'> {
+  children: React.ReactNode;
 }
 
-const Text = styled.span`
+export default function Label({ children, ...props }: LabelProps) {
+  return <Text {...props}>{children}</Text>;
+}
+
+const Text = styled.label`
   font-size: 12px;
   font-weight: 500;
   line-height: 15px;
