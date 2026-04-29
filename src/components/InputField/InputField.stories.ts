@@ -10,17 +10,24 @@ const meta = {
   component: InputField,
   parameters: {
     layout: 'centered',
-    docs: {                                                                                                                                                                                       
-        description: {                                                                                                                                                                              
-          component: '카드 정보를 입력받는 공용 Input 컴포넌트입니다.',
-        },                                                                                                                                                                                          
-      }, 
+    docs: {
+      description: {
+        component: '카드 정보를 입력받는 공용 Input 컴포넌트입니다.',
+      },
+    },
   },
 
   tags: ['autodocs'],
 
   argTypes: {
-    isError: { control: 'boolean' },
+    isError: {
+      control: 'boolean',
+      description: '에러 상태 여부. true일 때 빨간 테두리가 표시됩니다.',
+        table: {                                                                                                                            
+        type: { summary: 'boolean' },                                                                                                     
+        defaultValue: { summary: 'false' },                                                                                               
+      },  
+    },
     placeholder: { table: { disable: true } },
   },
 
