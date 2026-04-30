@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import ServiceLayout from './components/ServiceLayout/ServiceLayout';
+import ServiceLayout from './components/Layout/ServiceLayout';
 
 function App() {
   return (
