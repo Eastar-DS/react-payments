@@ -1,12 +1,13 @@
 import { styled } from 'storybook/theming';
 import CardNumbers from './CardNumbers';
+import { CardNumbersType } from '../Form/PaymentForm';
 
 export const cardBrand = { Visa: 'Visa', MasterCard: 'MasterCard' } as const;
 
 type CardBrandType = keyof typeof cardBrand;
 
 interface CardPreviewProps {
-  cardNumbers: number[][];
+  cardNumbers: CardNumbersType;
   expirationDate: string;
 }
 
@@ -73,7 +74,8 @@ const CardNumberList = styled.div`
   display: flex;
   justify-content: center;
   gap: 10px;
-  width: 100%;
+  width: 170px;
+  height: 20px;
 `;
 
 const ExpirationDate = styled.div`
