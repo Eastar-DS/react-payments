@@ -41,7 +41,7 @@ export default function CardPreview({ cardNumbers, expirationDate }: CardPreview
       <ContentWrapper>
         <CardNumberList>
           {cardNumbers.map((numbers, index) => (
-            <CardNumbers numbers={numbers} index={index}></CardNumbers>
+            <CardNumbers key={`cardNumbers-${index}`} numbers={numbers} index={index} />
           ))}
         </CardNumberList>
         <ExpirationDate>

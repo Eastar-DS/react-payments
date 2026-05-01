@@ -41,6 +41,7 @@ export default function InputFieldForm<T extends CardNumbersType | ExpirationDat
       <InputFieldWrapper>
         {Array.from({ length: numberList.length }).map((_, index) => (
           <FormField
+            key={`${label}-${index}`}
             id={index === 0 ? id : String(index)}
             index={index}
             numbers={numberList[index]}
