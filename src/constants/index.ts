@@ -19,3 +19,11 @@ export const INPUT_FIELD_CONFIG: Record<string, InputFieldConfig> = {
     placeholder: ['123'],
   },
 } as const;
+
+export const CARD_BRAND = { VISA: 'VISA', MASTER_CARD: 'MASTER' } as const;
+
+export const BRAND_ICON_MAP = {
+  VISA: 'src/assets/visa.svg',
+  MASTER: '/src/assets/mastercard.svg',
+  NONE: '',
+};

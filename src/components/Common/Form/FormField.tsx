@@ -67,6 +67,7 @@ export default function FormField({
         type="text"
         maxLength={fieldMaxLength}
         inputMode="numeric"
+        autoComplete="off"
         value={numbers}
         placeholder={placeholder}
         onChange={handleChange}

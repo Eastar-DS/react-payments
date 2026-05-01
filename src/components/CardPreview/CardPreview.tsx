@@ -1,10 +1,8 @@
 import { styled } from 'storybook/theming';
 import CardNumbers from './CardNumbers';
 import { CardNumbersType } from '../Form/PaymentForm';
-
-export const cardBrand = { Visa: 'Visa', MasterCard: 'MasterCard' } as const;
-
-type CardBrandType = keyof typeof cardBrand;
+import { validateNaN } from '../../utils/validate';
+import { BRAND_ICON_MAP, CARD_BRAND } from '../../constants';
 
 interface CardPreviewProps {
   cardNumbers: CardNumbersType;
@@ -12,12 +10,32 @@ interface CardPreviewProps {
 }
 
 export default function CardPreview({ cardNumbers, expirationDate }: CardPreviewProps) {
+  const cardNumbersToBrand = (value: string) => {
+    if (validateNaN(value)) return 'NONE';
+
+    if (value.length > 0) {
+      if (value.startsWith('4')) return CARD_BRAND['VISA'];
+      if (value.length >= 2) {
+        const numbers = Number(value.slice(0, 2));
+        if (numbers >= 51 && numbers <= 55) return CARD_BRAND['MASTER_CARD'];
+      }
+    }
+
+    return 'NONE';
+  };
+
+  const cardBrand = cardNumbersToBrand(cardNumbers[0]);
+
   const [month, year] = expirationDate.split('/');
   return (
     <Card>
       <Header>
         <Magenetic />
-        <BrandImage></BrandImage>
+        {BRAND_ICON_MAP[cardBrand] && (
+          <BrandImageWrapper>
+            <img src={BRAND_ICON_MAP[cardBrand]} alt="card-brand-image" />
+          </BrandImageWrapper>
+        )}
       </Header>
 
       <ContentWrapper>
@@ -60,10 +78,14 @@ const Magenetic = styled.div`
   border-radius: 4px;
 `;
 
-const BrandImage = styled.div`
+const BrandImageWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 36px;
   height: 22px;
-  background-color: #ddcd78;
+
+  border: 1px solid #d9d9d9;
   border-radius: 4px;
 `;
 
