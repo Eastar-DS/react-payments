@@ -8,6 +8,7 @@ import ErrorMessage from '../ErrorMessage/ErrorMessage';
 interface InputFieldFormProps<T extends CardNumbersType | ExpirationDateType | string> {
   id: string;
   label: string;
+  placeholderArr: string[];
   fieldMaxLength: number;
   value: T;
   validator: (inputValue: string, index: number) => { error: boolean; errorMessage: string };
@@ -17,6 +18,7 @@ interface InputFieldFormProps<T extends CardNumbersType | ExpirationDateType | s
 export default function InputFieldForm<T extends CardNumbersType | ExpirationDateType | string>({
   id,
   label,
+  placeholderArr,
   fieldMaxLength,
   value,
   validator,
@@ -45,8 +47,7 @@ export default function InputFieldForm<T extends CardNumbersType | ExpirationDat
             fieldMaxLength={fieldMaxLength}
             validator={validator}
             onChange={onChange}
-            // TODO: placeholder 추가 필요
-            // placeholder={}
+            placeholder={placeholderArr[index]}
             setErrorMessage={setErrorMessage}
           />
         ))}

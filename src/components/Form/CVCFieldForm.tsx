@@ -1,6 +1,7 @@
 import { ChangeEvent, useState } from 'react';
 import { cvcValidator } from '../../utils/validate';
 import InputFieldForm from '../Common/Form/InputFieldForm';
+import { INPUT_FIELD_CONFIG } from '../../constants';
 
 export default function CVCFieldForm() {
   const [cvcNumbers, setCVCNumbers] = useState<string>('');
@@ -12,7 +13,8 @@ export default function CVCFieldForm() {
   return (
     <InputFieldForm<string>
       id="cvcNumber"
-      label="CVC"
+      label={INPUT_FIELD_CONFIG['CVC'].label}
+      placeholderArr={INPUT_FIELD_CONFIG['CVC'].placeholder}
       fieldMaxLength={3}
       value={cvcNumbers}
       validator={cvcValidator}

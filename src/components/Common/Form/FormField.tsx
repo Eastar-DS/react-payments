@@ -16,6 +16,7 @@ interface FormFieldProps {
     errorMessage: string;
   };
   onChange: (e: ChangeEvent<HTMLInputElement>, index: number) => void;
+  placeholder: string;
   setErrorMessage: React.Dispatch<SetStateAction<string>>;
 }
 
@@ -26,6 +27,7 @@ export default function FormField({
   fieldMaxLength,
   validator,
   onChange,
+  placeholder,
   setErrorMessage,
 }: FormFieldProps) {
   const [isError, setIsError] = useState<boolean>(false);
@@ -66,6 +68,7 @@ export default function FormField({
         maxLength={fieldMaxLength}
         inputMode="numeric"
         value={numbers}
+        placeholder={placeholder}
         onChange={handleChange}
         onFocus={handleFocus}
         onBlur={handleBlur}

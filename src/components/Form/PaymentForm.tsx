@@ -5,6 +5,7 @@ import InputFieldLayout from '../Layout/InputFieldLayout';
 import { cardNumbersValidator, expirationDateValidator } from '../../utils/validate';
 import CVCFieldForm from './CVCFieldForm';
 import InputFieldForm from '../Common/Form/InputFieldForm';
+import { INPUT_FIELD_CONFIG } from '../../constants';
 
 export type CardNumbersType = [string, string, string, string];
 export type ExpirationDateType = { month: string; year: string };
@@ -39,12 +40,13 @@ export default function PaymentForm() {
       />
 
       <InputFieldLayout
-        sectionTitle="결제할 카드 번호를 입력해 주세요"
-        hintText="본인 명의의 카드만 결제 가능합니다."
+        sectionTitle={INPUT_FIELD_CONFIG['CARD_NUMBERS'].sectionTitle}
+        hintText={INPUT_FIELD_CONFIG['CARD_NUMBERS'].hintText}
       >
         <InputFieldForm<CardNumbersType>
           id="cardNumbers"
-          label="카드 번호"
+          label={INPUT_FIELD_CONFIG['CARD_NUMBERS'].label}
+          placeholderArr={INPUT_FIELD_CONFIG['CARD_NUMBERS'].placeholder}
           fieldMaxLength={4}
           value={cardNumbers}
           validator={cardNumbersValidator}
@@ -53,12 +55,13 @@ export default function PaymentForm() {
       </InputFieldLayout>
 
       <InputFieldLayout
-        sectionTitle="카드 유효기간을 입력해 주세요"
-        hintText="월/년도(MMYY)를 순서대로 입력해 주세요."
+        sectionTitle={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].sectionTitle}
+        hintText={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].hintText}
       >
         <InputFieldForm<ExpirationDateType>
           id="expirationDate"
-          label="유효기간"
+          label={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].label}
+          placeholderArr={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].placeholder}
           fieldMaxLength={2}
           value={expirationDate}
           validator={expirationDateValidator}
@@ -66,7 +69,7 @@ export default function PaymentForm() {
         />
       </InputFieldLayout>
 
-      <InputFieldLayout sectionTitle="CVC 번호를 입력해 주세요" hintText="">
+      <InputFieldLayout sectionTitle={INPUT_FIELD_CONFIG['CVC'].sectionTitle}>
         <CVCFieldForm />
       </InputFieldLayout>
     </FormContainer>

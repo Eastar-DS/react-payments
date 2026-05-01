@@ -8,7 +8,7 @@ export default function InputFieldLayout({
   children,
 }: {
   sectionTitle: React.ReactNode;
-  hintText: React.ReactNode;
+  hintText?: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
