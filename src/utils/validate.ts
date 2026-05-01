@@ -72,11 +72,11 @@ const validateInputValueLength = (inputValue: string, inputMaxLength: number) =>
   inputValue.length < inputMaxLength;
 
 // cardBrand 번호가 맞는지 검증
-const validateCardBrandNumber = (inputValue: string) => {
+export const validateCardBrandNumber = (inputValue: string) => {
   if (inputValue.startsWith('4')) return false;
 
-  const copy = Number(inputValue.slice(0, 2));
-  if (copy >= 51 && copy <= 55) return false;
+  const slicedValue = Number(inputValue.slice(0, 2));
+  if (slicedValue >= 51 && slicedValue <= 55) return false;
 
   return true;
 };
