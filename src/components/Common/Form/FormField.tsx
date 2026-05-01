@@ -1,13 +1,16 @@
 import { ChangeEvent, FocusEvent, SetStateAction, useState } from 'react';
 import styled from '@emotion/styled';
-import InputField from '../Common/InputField/InputField';
+import InputField from '../InputField/InputField';
 
 interface FormFieldProps {
   id: string;
   index: number;
   numbers: string;
   fieldMaxLength: number;
-  validator: (value: string) => {
+  validator: (
+    value: string,
+    index: number
+  ) => {
     error: boolean;
     errorMessage: string;
   };
@@ -26,8 +29,8 @@ export default function FormField({
 }: FormFieldProps) {
   const [isError, setIsError] = useState<boolean>(false);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
-    const { error, errorMessage } = validator(e.target.value);
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { error, errorMessage } = validator(e.target.value, index);
 
     setIsError(error);
     setErrorMessage(errorMessage);
@@ -38,11 +41,12 @@ export default function FormField({
   const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
     if (e.target.value.trim().length === 0) return;
 
-    const { errorMessage } = validator(e.target.value);
+    const { errorMessage } = validator(e.target.value, index);
     setErrorMessage(errorMessage);
   };
 
-  const handleBlur = () => {
+  const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
+    if (e.target.value === '') setIsError(false);
     setErrorMessage('');
   };
 
@@ -55,7 +59,7 @@ export default function FormField({
         maxLength={fieldMaxLength}
         inputMode="numeric"
         value={numbers}
-        onChange={(e) => handleChange(e, index)}
+        onChange={handleChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
       />

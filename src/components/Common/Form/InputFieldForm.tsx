@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
-import Label from '../Common/Label/Label';
 import { ChangeEvent, useState } from 'react';
-import { CardNumbersType, ExpirationDateType } from './PaymentForm';
-import ErrorMessage from '../Common/ErrorMessage/ErrorMessage';
 import FormField from './FormField';
+import { CardNumbersType, ExpirationDateType } from '../../Form/PaymentForm';
+import Label from '../Label/Label';
+import ErrorMessage from '../ErrorMessage/ErrorMessage';
 
 interface InputFieldFormProps<T extends CardNumbersType | ExpirationDateType | string> {
   id: string;
@@ -43,7 +43,7 @@ export default function InputFieldForm<T extends CardNumbersType | ExpirationDat
             index={index}
             numbers={numberList[index]}
             fieldMaxLength={fieldMaxLength}
-            validator={(value) => validator(value, index)}
+            validator={validator}
             onChange={onChange}
             // TODO: placeholder 추가 필요
             // placeholder={}
