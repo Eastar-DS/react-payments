@@ -12,6 +12,7 @@ interface CardPreviewProps {
 }
 
 export default function CardPreview({ cardNumbers, expirationDate }: CardPreviewProps) {
+  const [month, year] = expirationDate.split('/');
   return (
     <Card>
       <Header>
@@ -25,7 +26,9 @@ export default function CardPreview({ cardNumbers, expirationDate }: CardPreview
             <CardNumbers numbers={numbers} index={index}></CardNumbers>
           ))}
         </CardNumberList>
-        <ExpirationDate>{expirationDate}</ExpirationDate>
+        <ExpirationDate>
+          {month.length > 0 || year.length > 0 ? `${month} / ${year}` : ''}
+        </ExpirationDate>
       </ContentWrapper>
     </Card>
   );
@@ -79,6 +82,9 @@ const CardNumberList = styled.div`
 `;
 
 const ExpirationDate = styled.div`
+  display: flex;
+  justify-content: space-around;
+  width: 44px;
   font-size: 14px;
   font-weight: 500;
   color: #fff;
