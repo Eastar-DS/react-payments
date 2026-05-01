@@ -26,6 +26,7 @@ const Layout = styled.section`
   display: flex;
   flex-direction: column;
   gap: 16px;
+  width: 100%;
 `;
 
 const Header = styled.header`
