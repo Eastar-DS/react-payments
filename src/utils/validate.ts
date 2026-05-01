@@ -3,15 +3,7 @@ export const cardNumbersValidator = (inputValue: string, index: number) => {
   if (isFirstCardNumbers && validateCardBrandNumber(inputValue)) {
     return {
       error: true,
-      // TODO: 에러 메시지 상수화 필요
       errorMessage: '유효한 카드 브랜드 번호를 입력해주세요.',
-    };
-  }
-
-  if (validateNaN(inputValue)) {
-    return {
-      error: true,
-      errorMessage: '숫자만 입력 가능합니다.',
     };
   }
 
@@ -29,13 +21,6 @@ export const cardNumbersValidator = (inputValue: string, index: number) => {
 };
 
 export const expirationDateValidator = (inputValue: string, index: number) => {
-  if (validateNaN(inputValue)) {
-    return {
-      error: true,
-      errorMessage: '숫자만 입력 가능합니다.',
-    };
-  }
-
   if (validateInputValueLength(inputValue, 2)) {
     return {
       error: true,
@@ -66,13 +51,6 @@ export const expirationDateValidator = (inputValue: string, index: number) => {
 };
 
 export const cvcValidator = (inputValue: string) => {
-  if (validateNaN(inputValue)) {
-    return {
-      error: true,
-      errorMessage: '숫자만 입력 가능합니다.',
-    };
-  }
-
   if (validateInputValueLength(inputValue, 3)) {
     return {
       error: true,
@@ -87,7 +65,7 @@ export const cvcValidator = (inputValue: string) => {
 };
 
 // 숫자 외의 값이 입력되는 경우 검증
-const validateNaN = (inputValue: string) => isNaN(Number(inputValue));
+export const validateNaN = (inputValue: string) => isNaN(Number(inputValue));
 
 // 입력된 번호의 개수가 maxLength보다 작은 경우 검증
 const validateInputValueLength = (inputValue: string, inputMaxLength: number) =>

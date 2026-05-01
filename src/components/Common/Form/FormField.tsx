@@ -1,6 +1,7 @@
 import { ChangeEvent, FocusEvent, SetStateAction, useState } from 'react';
 import styled from '@emotion/styled';
 import InputField from '../InputField/InputField';
+import { validateNaN } from '../../../utils/validate';
 
 interface FormFieldProps {
   id: string;
@@ -31,6 +32,12 @@ export default function FormField({
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { error, errorMessage } = validator(e.target.value, index);
+
+    if (validateNaN(e.target.value)) {
+      setIsError(true);
+      setErrorMessage('숫자만 입력 가능합니다.');
+      return;
+    }
 
     setIsError(error);
     setErrorMessage(errorMessage);
