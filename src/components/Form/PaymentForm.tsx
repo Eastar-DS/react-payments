@@ -2,8 +2,9 @@ import { ChangeEvent, useState } from 'react';
 import styled from '@emotion/styled';
 import CardPreview from '../CardPreview/CardPreview';
 import InputFieldLayout from '../Layout/InputFieldLayout';
-import InputFieldForm from './InputFieldForm';
 import { cardNumbersValidator, expirationDateValidator } from '../../utils/validate';
+import CVCFieldForm from './CVCFieldForm';
+import InputFieldForm from '../Common/Form/InputFieldForm';
 
 export type CardNumbersType = [string, string, string, string];
 export type ExpirationDateType = { month: string; year: string };
@@ -20,7 +21,7 @@ export default function PaymentForm() {
     });
   };
 
-  const handleExpirationDate = (e: ChangeEvent<HTMLInputElement>, index: number) => {
+  const handleExpirationDateChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
     const key = index === 0 ? 'month' : 'year';
 
     setExpirationDate((prev) => {
@@ -32,7 +33,10 @@ export default function PaymentForm() {
 
   return (
     <FormContainer>
-      <CardPreview cardNumbers={cardNumbers} expirationDate={'04/21'} />
+      <CardPreview
+        cardNumbers={cardNumbers}
+        expirationDate={`${expirationDate['month']}/${expirationDate['year']}`}
+      />
 
       <InputFieldLayout
         sectionTitle="결제할 카드 번호를 입력해 주세요"
@@ -58,8 +62,12 @@ export default function PaymentForm() {
           fieldMaxLength={2}
           value={expirationDate}
           validator={expirationDateValidator}
-          onChange={handleExpirationDate}
+          onChange={handleExpirationDateChange}
         />
+      </InputFieldLayout>
+
+      <InputFieldLayout sectionTitle="CVC 번호를 입력해 주세요" hintText="">
+        <CVCFieldForm />
       </InputFieldLayout>
     </FormContainer>
   );

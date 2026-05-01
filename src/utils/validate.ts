@@ -65,6 +65,27 @@ export const expirationDateValidator = (inputValue: string, index: number) => {
   };
 };
 
+export const cvcValidator = (inputValue: string) => {
+  if (validateNaN(inputValue)) {
+    return {
+      error: true,
+      errorMessage: '숫자만 입력 가능합니다.',
+    };
+  }
+
+  if (validateInputValueLength(inputValue, 3)) {
+    return {
+      error: true,
+      errorMessage: '숫자는 3자리를 입력해야 합니다.',
+    };
+  }
+
+  return {
+    error: false,
+    errorMessage: '',
+  };
+};
+
 // 숫자 외의 값이 입력되는 경우 검증
 const validateNaN = (inputValue: string) => isNaN(Number(inputValue));
 
