@@ -5,11 +5,11 @@ import { validateNaN } from '../../utils/validate';
 import { BRAND_ICON_MAP, CARD_BRAND } from '../../constants';
 
 interface CardPreviewProps {
-  cardNumbers: CardNumbersType;
+  cardNumberList: CardNumbersType;
   expirationDate: string;
 }
 
-export default function CardPreview({ cardNumbers, expirationDate }: CardPreviewProps) {
+export default function CardPreview({ cardNumberList, expirationDate }: CardPreviewProps) {
   const cardNumbersToBrand = (value: string) => {
     if (validateNaN(value)) return 'NONE';
 
@@ -24,23 +24,23 @@ export default function CardPreview({ cardNumbers, expirationDate }: CardPreview
     return 'NONE';
   };
 
-  const cardBrand = cardNumbersToBrand(cardNumbers[0]);
+  const cardBrand = cardNumbersToBrand(cardNumberList[0]);
 
-  const [month, year] = expirationDate.split('/');
+  const [month = '', year = ''] = expirationDate.split('/');
   return (
     <Card>
       <Header>
         <Magenetic />
         {BRAND_ICON_MAP[cardBrand] && (
           <BrandImageWrapper>
-            <img src={BRAND_ICON_MAP[cardBrand]} alt="card-brand-image" />
+            <BrandImage src={BRAND_ICON_MAP[cardBrand]} alt="card-brand-image" />
           </BrandImageWrapper>
         )}
       </Header>
 
       <ContentWrapper>
         <CardNumberList>
-          {cardNumbers.map((numbers, index) => (
+          {cardNumberList.map((numbers, index) => (
             <CardNumbers key={`cardNumbers-${index}`} numbers={numbers} index={index} />
           ))}
         </CardNumberList>
@@ -87,6 +87,11 @@ const BrandImageWrapper = styled.div`
 
   border: 1px solid #d9d9d9;
   border-radius: 4px;
+`;
+
+const BrandImage = styled.img`
+  width: 100%;
+  height: auto;
 `;
 
 const ContentWrapper = styled.div`

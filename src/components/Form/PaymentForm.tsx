@@ -35,7 +35,7 @@ export default function PaymentForm() {
   return (
     <FormContainer>
       <CardPreview
-        cardNumbers={cardNumbers}
+        cardNumberList={cardNumbers}
         expirationDate={`${expirationDate['month']}/${expirationDate['year']}`}
       />
 
