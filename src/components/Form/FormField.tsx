@@ -6,6 +6,7 @@ interface FormFieldProps {
   id: string;
   index: number;
   numbers: string;
+  fieldMaxLength: number;
   validator: (value: string) => {
     error: boolean;
     errorMessage: string;
@@ -18,6 +19,7 @@ export default function FormField({
   id,
   index,
   numbers,
+  fieldMaxLength,
   validator,
   onChange,
   setErrorMessage,
@@ -50,7 +52,7 @@ export default function FormField({
         isError={isError}
         id={index === 0 ? id : String(index)}
         type="text"
-        maxLength={4}
+        maxLength={fieldMaxLength}
         inputMode="numeric"
         value={numbers}
         onChange={(e) => handleChange(e, index)}
@@ -65,4 +67,5 @@ const FormFieldContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
+  width: 100%;
 `;

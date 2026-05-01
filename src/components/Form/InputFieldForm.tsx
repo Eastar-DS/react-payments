@@ -8,17 +8,16 @@ import FormField from './FormField';
 interface InputFieldFormProps<T extends CardNumbersType | ExpirationDateType | string> {
   id: string;
   label: string;
+  fieldMaxLength: number;
   value: T;
-  validator: (
-    inputValue: string,
-    index: number
-  ) => { error: boolean; errorMessage: string };
+  validator: (inputValue: string, index: number) => { error: boolean; errorMessage: string };
   onChange: (e: ChangeEvent<HTMLInputElement>, index: number) => void;
 }
 
 export default function InputFieldForm<T extends CardNumbersType | ExpirationDateType | string>({
   id,
   label,
+  fieldMaxLength,
   value,
   validator,
   onChange,
@@ -43,8 +42,11 @@ export default function InputFieldForm<T extends CardNumbersType | ExpirationDat
             id={index === 0 ? id : String(index)}
             index={index}
             numbers={numberList[index]}
+            fieldMaxLength={fieldMaxLength}
             validator={(value) => validator(value, index)}
             onChange={onChange}
+            // TODO: placeholder 추가 필요
+            // placeholder={}
             setErrorMessage={setErrorMessage}
           />
         ))}
