@@ -1,3 +1,5 @@
+import visaIcon from '../assets/visa.svg';
+import masterIcon from '../assets/mastercard.svg';
 import { InputFieldConfig } from '../types';
 
 export const INPUT_FIELD_CONFIG: Record<string, InputFieldConfig> = {
@@ -31,8 +33,8 @@ export const ERROR_MESSAGE = {
 export const CARD_BRAND = { VISA: 'VISA', MASTER_CARD: 'MASTER' } as const;
 
 export const BRAND_ICON_MAP = {
-  VISA: 'src/assets/visa.svg',
-  MASTER: '/src/assets/mastercard.svg',
+  VISA: visaIcon,
+  MASTER: masterIcon,
   NONE: '',
 } as const;
 
