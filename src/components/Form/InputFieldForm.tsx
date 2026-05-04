@@ -1,9 +1,10 @@
 import styled from '@emotion/styled';
 import { ChangeEvent, useState } from 'react';
-import FormField from './FormField';
-import { CardNumbersType, ExpirationDateType } from '../../Form/PaymentForm';
-import Label from '../Label/Label';
-import ErrorMessage from '../ErrorMessage/ErrorMessage';
+import FormField from '../Common/Form/FormField';
+
+import Label from '../Common/Label/Label';
+import ErrorMessage from '../Common/ErrorMessage/ErrorMessage';
+import { CardNumbersType, ExpirationDateType } from '../../types';
 
 interface InputFieldFormProps<T extends CardNumbersType | ExpirationDateType | string> {
   id: string;
