@@ -4,9 +4,9 @@ import FormField from '../Common/Form/FormField';
 
 import Label from '../Common/Label/Label';
 import ErrorMessage from '../Common/ErrorMessage/ErrorMessage';
-import { CardNumbersType, ExpirationDateType } from '../../types';
+import { CardNumbersType, ExpirationDateListType } from '../../types';
 
-interface InputFieldFormProps<T extends CardNumbersType | ExpirationDateType | string> {
+interface InputFieldFormProps<T extends CardNumbersType | ExpirationDateListType | string> {
   id: string;
   label: string;
   placeholderArr: string[];
@@ -16,7 +16,9 @@ interface InputFieldFormProps<T extends CardNumbersType | ExpirationDateType | s
   onChange: (e: ChangeEvent<HTMLInputElement>, index: number) => void;
 }
 
-export default function InputFieldForm<T extends CardNumbersType | ExpirationDateType | string>({
+export default function InputFieldForm<
+  T extends CardNumbersType | ExpirationDateListType | string,
+>({
   id,
   label,
   placeholderArr,
