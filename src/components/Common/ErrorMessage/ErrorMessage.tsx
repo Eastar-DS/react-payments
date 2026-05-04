@@ -6,8 +6,6 @@ export default function ErrorMessage({ children }: { children: ReactNode }) {
 }
 
 const Message = styled.span`
-  width: 100%;
-  height: 14px;
   font-size: 9.5px;
   font-weight: 400;
   color: #ff3d3d;
