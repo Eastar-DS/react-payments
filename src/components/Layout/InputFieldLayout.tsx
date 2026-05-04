@@ -15,7 +15,7 @@ export default function InputFieldLayout({
     <Layout>
       <Header>
         <SectionTitle>{sectionTitle}</SectionTitle>
-        <HintText>{hintText}</HintText>
+        {hintText ? <HintText>{hintText}</HintText> : null}
       </Header>
       <ContentWrapper>{children}</ContentWrapper>
     </Layout>
