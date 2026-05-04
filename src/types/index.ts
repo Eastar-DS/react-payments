@@ -6,3 +6,6 @@ interface InputFieldConfig {
 }
 
 export type { InputFieldConfig };
+
+export type CardNumbersType = [string, string, string, string];
+export type ExpirationDateType = { month: string; year: string };

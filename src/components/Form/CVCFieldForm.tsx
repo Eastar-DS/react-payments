@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from 'react';
 import { cvcValidator } from '../../utils/validate';
-import InputFieldForm from '../Common/Form/InputFieldForm';
+import InputFieldForm from './InputFieldForm';
 import { INPUT_FIELD_CONFIG } from '../../constants';
 
 export default function CVCFieldForm() {

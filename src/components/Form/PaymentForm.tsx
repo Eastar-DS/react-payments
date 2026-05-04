@@ -4,11 +4,9 @@ import CardPreview from '../CardPreview/CardPreview';
 import InputFieldLayout from '../Layout/InputFieldLayout';
 import { cardNumbersValidator, expirationDateValidator } from '../../utils/validate';
 import CVCFieldForm from './CVCFieldForm';
-import InputFieldForm from '../Common/Form/InputFieldForm';
+import InputFieldForm from './InputFieldForm';
 import { INPUT_FIELD_CONFIG } from '../../constants';
-
-export type CardNumbersType = [string, string, string, string];
-export type ExpirationDateType = { month: string; year: string };
+import { CardNumbersType, ExpirationDateType } from '../../types';
 
 export default function PaymentForm() {
   const [cardNumbers, setCardNumbers] = useState<CardNumbersType>(['', '', '', '']);

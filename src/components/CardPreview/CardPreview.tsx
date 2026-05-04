@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import CardNumbers from './CardNumbers';
-import { CardNumbersType } from '../Form/PaymentForm';
 import { validateNaN } from '../../utils/validate';
 import { BRAND_ICON_MAP, CARD_BRAND } from '../../constants';
+import { CardNumbersType } from '../../types';
 
 interface CardPreviewProps {
   cardNumberList: CardNumbersType;
