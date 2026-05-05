@@ -4,9 +4,8 @@ import FormField from '../Common/Form/FormField';
 
 import Label from '../Common/Label/Label';
 import ErrorMessage from '../Common/ErrorMessage/ErrorMessage';
-import { CardNumbersType, ExpirationDateListType } from '../../types';
 
-interface InputFieldFormProps<T extends CardNumbersType | ExpirationDateListType | string> {
+interface InputFieldFormProps<T> {
   id: string;
   label: string;
   placeholderArr: string[];
@@ -16,9 +15,7 @@ interface InputFieldFormProps<T extends CardNumbersType | ExpirationDateListType
   onChange: (e: ChangeEvent<HTMLInputElement>, index: number) => void;
 }
 
-export default function InputFieldForm<
-  T extends CardNumbersType | ExpirationDateListType | string,
->({
+export default function InputFieldForm<T>({
   id,
   label,
   placeholderArr,
@@ -32,7 +29,7 @@ export default function InputFieldForm<
   const convertValueToStringArray = (value: T): string[] => {
     if (typeof value === 'string') return [value];
     if (Array.isArray(value)) return value;
-    return Object.values(value);
+    return [];
   };
 
   const numberList = convertValueToStringArray(value);
