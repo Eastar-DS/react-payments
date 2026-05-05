@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import FormField from '../Common/Form/FormField';
-
 import Label from '../Common/Label/Label';
 import ErrorMessage from '../Common/ErrorMessage/ErrorMessage';
+import { ValidatorResult } from '../../types';
 
 interface InputFieldFormProps<T> {
   id: string;
@@ -11,8 +11,8 @@ interface InputFieldFormProps<T> {
   placeholderArr: string[];
   fieldMaxLength: number;
   value: T;
-  validator: (inputValue: string, index: number) => { error: boolean; errorMessage: string };
-  onChange: (e: ChangeEvent<HTMLInputElement>, index: number) => void;
+  validator: (inputValue: string, index: number) => ValidatorResult;
+  onChange: (value: string, index: number) => void;
 }
 
 export default function InputFieldForm<T>({
@@ -25,6 +25,25 @@ export default function InputFieldForm<T>({
   onChange,
 }: InputFieldFormProps<T>) {
   const [errorMessage, setErrorMessage] = useState<string>('');
+
+  const handleFieldChange = (
+    value: string,
+    index: number,
+    validation: { error: boolean; errorMessage: string; block: boolean }
+  ) => {
+    setErrorMessage(validation.errorMessage);
+    if (!validation.block) {
+      onChange(value, index);
+    }
+  };
+
+  const handleFocus = (validation: { error: boolean; errorMessage: string; block: boolean }) => {
+    setErrorMessage(validation.errorMessage);
+  };
+
+  const handleBlur = () => {
+    setErrorMessage('');
+  };
 
   const convertValueToStringArray = (value: T): string[] => {
     if (typeof value === 'string') return [value];
@@ -47,9 +66,10 @@ export default function InputFieldForm<T>({
             numbers={numberList[index]}
             fieldMaxLength={fieldMaxLength}
             validator={validator}
-            onChange={onChange}
+            onChange={handleFieldChange}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
             placeholder={placeholderArr[index]}
-            setErrorMessage={setErrorMessage}
           />
         ))}
       </InputFieldWrapper>

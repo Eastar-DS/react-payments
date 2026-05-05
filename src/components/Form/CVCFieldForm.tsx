@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import { cvcValidator } from '../../utils/validate';
 import InputFieldForm from './InputFieldForm';
 import { INPUT_FIELD_CONFIG } from '../../constants';
@@ -6,8 +6,8 @@ import { INPUT_FIELD_CONFIG } from '../../constants';
 export default function CVCFieldForm() {
   const [cvcNumbers, setCVCNumbers] = useState<string>('');
 
-  const handleCVCNumbersChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setCVCNumbers(e.target.value);
+  const handleCVCNumbersChange = (value: string) => {
+    setCVCNumbers(value);
   };
 
   return (

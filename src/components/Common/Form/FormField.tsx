@@ -1,23 +1,20 @@
-import { ChangeEvent, FocusEvent, SetStateAction, useState } from 'react';
+import { ChangeEvent, FocusEvent, useState } from 'react';
 import styled from '@emotion/styled';
 import InputField from '../InputField/InputField';
 import { validateNaN } from '../../../utils/validate';
+import { ValidationResult, ValidatorResult } from '../../../types';
+import { ERROR_MESSAGE } from '../../../constants';
 
 interface FormFieldProps {
   id: string;
   index: number;
   numbers: string;
   fieldMaxLength: number;
-  validator: (
-    value: string,
-    index: number
-  ) => {
-    error: boolean;
-    errorMessage: string;
-  };
-  onChange: (e: ChangeEvent<HTMLInputElement>, index: number) => void;
+  validator: (value: string, index: number) => ValidatorResult;
+  onChange: (value: string, index: number, validation: ValidationResult) => void;
+  onFocus: (validation: ValidationResult) => void;
+  onBlur: () => void;
   placeholder: string;
-  setErrorMessage: React.Dispatch<SetStateAction<string>>;
 }
 
 export default function FormField({
@@ -27,36 +24,38 @@ export default function FormField({
   fieldMaxLength,
   validator,
   onChange,
+  onFocus,
+  onBlur,
   placeholder,
-  setErrorMessage,
 }: FormFieldProps) {
   const [isError, setIsError] = useState<boolean>(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { error, errorMessage } = validator(e.target.value, index);
+    const value = e.target.value;
 
-    if (validateNaN(e.target.value)) {
+    if (validateNaN(value)) {
       setIsError(true);
-      setErrorMessage('숫자만 입력 가능합니다.');
+      onChange(value, index, { error: true, errorMessage: ERROR_MESSAGE.NAN, block: true });
       return;
     }
 
-    setIsError(error);
-    setErrorMessage(errorMessage);
+    const { error, errorMessage } = validator(value, index);
 
-    onChange(e, index);
+    setIsError(error);
+
+    onChange(value, index, { error, errorMessage, block: false });
   };
 
   const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
     if (e.target.value.trim().length === 0) return;
 
-    const { errorMessage } = validator(e.target.value, index);
-    setErrorMessage(errorMessage);
+    const { error, errorMessage } = validator(e.target.value, index);
+    onFocus({ error, errorMessage, block: false });
   };
 
   const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
     if (e.target.value === '') setIsError(false);
-    setErrorMessage('');
+    onBlur();
   };
 
   return (

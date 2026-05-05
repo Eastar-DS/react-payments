@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import styled from '@emotion/styled';
 import CardPreview from '../CardPreview/CardPreview';
 import InputFieldLayout from '../Layout/InputFieldLayout';
@@ -12,20 +12,20 @@ export default function PaymentForm() {
   const [cardNumbers, setCardNumbers] = useState<CardNumbersType>(['', '', '', '']);
   const [expirationDate, setExpirationDate] = useState<ExpirationDateType>({ month: '', year: '' });
 
-  const handleCardNumbersChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
+  const handleCardNumbersChange = (value: string, index: number) => {
     setCardNumbers((prev) => {
       const newCardNumbers = [...prev] as CardNumbersType;
-      newCardNumbers[index] = e.target.value;
+      newCardNumbers[index] = value;
       return newCardNumbers;
     });
   };
 
-  const handleExpirationDateChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
+  const handleExpirationDateChange = (value: string, index: number) => {
     const key = index === 0 ? 'month' : 'year';
 
     setExpirationDate((prev) => {
       const newExpirationDate = { ...prev };
-      newExpirationDate[key] = e.target.value;
+      newExpirationDate[key] = value;
       return newExpirationDate;
     });
   };
