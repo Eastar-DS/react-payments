@@ -6,15 +6,15 @@ import { cardNumbersValidator, expirationDateValidator } from '../../utils/valid
 import CVCFieldForm from './CVCFieldForm';
 import InputFieldForm from './InputFieldForm';
 import { INPUT_FIELD_CONFIG } from '../../constants';
-import { CardNumbersType, ExpirationDateListType, ExpirationDateType } from '../../types';
+import { CardNumbers, ExpirationDateList, ExpirationDate } from '../../types';
 
 export default function PaymentForm() {
-  const [cardNumbers, setCardNumbers] = useState<CardNumbersType>(['', '', '', '']);
-  const [expirationDate, setExpirationDate] = useState<ExpirationDateType>({ month: '', year: '' });
+  const [cardNumbers, setCardNumbers] = useState<CardNumbers>(['', '', '', '']);
+  const [expirationDate, setExpirationDate] = useState<ExpirationDate>({ month: '', year: '' });
 
   const handleCardNumbersChange = (value: string, index: number) => {
     setCardNumbers((prev) => {
-      const newCardNumbers = [...prev] as CardNumbersType;
+      const newCardNumbers = [...prev] as CardNumbers;
       newCardNumbers[index] = value;
       return newCardNumbers;
     });
@@ -41,7 +41,7 @@ export default function PaymentForm() {
         sectionTitle={INPUT_FIELD_CONFIG['CARD_NUMBERS'].sectionTitle}
         hintText={INPUT_FIELD_CONFIG['CARD_NUMBERS'].hintText}
       >
-        <InputFieldForm<CardNumbersType>
+        <InputFieldForm<CardNumbers>
           id="cardNumbers"
           label={INPUT_FIELD_CONFIG['CARD_NUMBERS'].label}
           placeholderArr={INPUT_FIELD_CONFIG['CARD_NUMBERS'].placeholder}
@@ -56,7 +56,7 @@ export default function PaymentForm() {
         sectionTitle={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].sectionTitle}
         hintText={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].hintText}
       >
-        <InputFieldForm<ExpirationDateListType>
+        <InputFieldForm<ExpirationDateList>
           id="expirationDate"
           label={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].label}
           placeholderArr={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].placeholder}
