@@ -7,17 +7,27 @@ import CVCFieldForm from './CVCFieldForm';
 import InputFieldForm from './InputFieldForm';
 import { INPUT_FIELD_CONFIG } from '../../constants';
 import { CardNumbers, ExpirationDateList, ExpirationDate } from '../../types';
+import { detectCardBrand, getSegmentLengths, replaceSegmentAt, reshapeCardNumbers } from '../../utils/cardBrand';
 
 export default function PaymentForm() {
   const [cardNumbers, setCardNumbers] = useState<CardNumbers>(['', '', '', '']);
   const [expirationDate, setExpirationDate] = useState<ExpirationDate>({ month: '', year: '' });
 
-  const handleCardNumbersChange = (value: string, index: number) => {
-    setCardNumbers((prev) => {
-      const newCardNumbers = [...prev] as CardNumbers;
-      newCardNumbers[index] = value;
-      return newCardNumbers;
-    });
+  const cardBrand = detectCardBrand(cardNumbers.join(''));
+  // const segmentLengths = getSegmentLengths(cardBrand);
+
+  const handleSegmentChange = (value: string, index: number) => {
+    const next = replaceSegmentAt(cardNumbers, index, value);
+
+    const newBrand = detectCardBrand(next.join(''));
+    const newSegmentLengths = getSegmentLengths(newBrand);
+
+    const adjusted: CardNumbers =
+      next.length === newSegmentLengths.length
+        ? next
+        : reshapeCardNumbers(next, newSegmentLengths);
+
+    setCardNumbers(adjusted);
   };
 
   const handleExpirationDateChange = (value: string, index: number) => {
@@ -33,6 +43,7 @@ export default function PaymentForm() {
   return (
     <FormContainer>
       <CardPreview
+        cardBrand={cardBrand}
         cardNumberList={cardNumbers}
         expirationDate={`${expirationDate['month']}/${expirationDate['year']}`}
       />
@@ -48,7 +59,7 @@ export default function PaymentForm() {
           fieldMaxLength={4}
           value={cardNumbers}
           validator={cardNumbersValidator}
-          onChange={handleCardNumbersChange}
+          onChange={handleSegmentChange}
         />
       </InputFieldLayout>
 
@@ -61,7 +72,7 @@ export default function PaymentForm() {
           label={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].label}
           placeholderArr={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].placeholder}
           fieldMaxLength={2}
-          value={[expirationDate.month,expirationDate.year]}
+          value={[expirationDate.month, expirationDate.year]}
           validator={expirationDateValidator}
           onChange={handleExpirationDateChange}
         />
