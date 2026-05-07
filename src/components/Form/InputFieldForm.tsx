@@ -5,25 +5,25 @@ import Label from '../Common/Label/Label';
 import ErrorMessage from '../Common/ErrorMessage/ErrorMessage';
 import { ValidatorResult } from '../../types';
 
-interface InputFieldFormProps<T> {
+interface InputFieldFormProps {
   id: string;
   label: string;
   placeholderArr: readonly string[];
-  fieldMaxLength: number;
-  value: T;
+  fieldMaxLengths: readonly number[];
+  values: readonly string[];
   validator: (inputValue: string, index: number) => ValidatorResult;
   onChange: (value: string, index: number) => void;
 }
 
-export default function InputFieldForm<T>({
+export default function InputFieldForm({
   id,
   label,
   placeholderArr,
-  fieldMaxLength,
-  value,
+  fieldMaxLengths,
+  values,
   validator,
   onChange,
-}: InputFieldFormProps<T>) {
+}: InputFieldFormProps) {
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const handleFieldChange = (
@@ -45,26 +45,18 @@ export default function InputFieldForm<T>({
     setErrorMessage('');
   };
 
-  const convertValueToStringArray = (value: T): string[] => {
-    if (typeof value === 'string') return [value];
-    if (Array.isArray(value)) return value;
-    return [];
-  };
-
-  const numberList = convertValueToStringArray(value);
-
   return (
     <FormContainer>
       <Label htmlFor={id}>{label}</Label>
 
       <InputFieldWrapper>
-        {Array.from({ length: numberList.length }).map((_, index) => (
+        {values.map((numbers, index) => (
           <FormField
             key={`${label}-${index}`}
             id={index === 0 ? id : String(index)}
             index={index}
-            numbers={numberList[index]}
-            fieldMaxLength={fieldMaxLength}
+            numbers={numbers}
+            fieldMaxLength={fieldMaxLengths[index]}
             validator={validator}
             onChange={handleFieldChange}
             onFocus={handleFocus}

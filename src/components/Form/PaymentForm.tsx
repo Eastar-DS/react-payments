@@ -6,7 +6,7 @@ import { cardNumbersValidator, expirationDateValidator } from '../../utils/valid
 import CVCFieldForm from './CVCFieldForm';
 import InputFieldForm from './InputFieldForm';
 import { INPUT_FIELD_CONFIG } from '../../constants';
-import { CardNumbers, ExpirationDateList, ExpirationDate } from '../../types';
+import { CardNumbers, ExpirationDate } from '../../types';
 import { detectCardBrand, getSegmentLengths, replaceSegmentAt, reshapeCardNumbers } from '../../utils/cardBrand';
 
 export default function PaymentForm() {
@@ -14,7 +14,7 @@ export default function PaymentForm() {
   const [expirationDate, setExpirationDate] = useState<ExpirationDate>({ month: '', year: '' });
 
   const cardBrand = detectCardBrand(cardNumbers.join(''));
-  // const segmentLengths = getSegmentLengths(cardBrand);
+  const segmentLengths = getSegmentLengths(cardBrand);
 
   const handleSegmentChange = (value: string, index: number) => {
     const next = replaceSegmentAt(cardNumbers, index, value);
@@ -52,12 +52,12 @@ export default function PaymentForm() {
         sectionTitle={INPUT_FIELD_CONFIG['CARD_NUMBERS'].sectionTitle}
         hintText={INPUT_FIELD_CONFIG['CARD_NUMBERS'].hintText}
       >
-        <InputFieldForm<CardNumbers>
+        <InputFieldForm
           id="cardNumbers"
           label={INPUT_FIELD_CONFIG['CARD_NUMBERS'].label}
           placeholderArr={INPUT_FIELD_CONFIG['CARD_NUMBERS'].placeholder}
-          fieldMaxLength={4}
-          value={cardNumbers}
+          fieldMaxLengths={segmentLengths}
+          values={cardNumbers}
           validator={cardNumbersValidator}
           onChange={handleSegmentChange}
         />
@@ -67,12 +67,12 @@ export default function PaymentForm() {
         sectionTitle={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].sectionTitle}
         hintText={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].hintText}
       >
-        <InputFieldForm<ExpirationDateList>
+        <InputFieldForm
           id="expirationDate"
           label={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].label}
           placeholderArr={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].placeholder}
-          fieldMaxLength={2}
-          value={[expirationDate.month, expirationDate.year]}
+          fieldMaxLengths={[2,2]}
+          values={[expirationDate.month, expirationDate.year]}
           validator={expirationDateValidator}
           onChange={handleExpirationDateChange}
         />

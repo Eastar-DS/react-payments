@@ -11,12 +11,12 @@ export default function CVCFieldForm() {
   };
 
   return (
-    <InputFieldForm<string>
+    <InputFieldForm
       id="cvcNumber"
       label={INPUT_FIELD_CONFIG['CVC'].label}
       placeholderArr={INPUT_FIELD_CONFIG['CVC'].placeholder}
-      fieldMaxLength={3}
-      value={cvcNumbers}
+      fieldMaxLengths={[3]}
+      values={[cvcNumbers]}
       validator={cvcValidator}
       onChange={handleCVCNumbersChange}
     />
