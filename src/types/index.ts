@@ -1,9 +1,7 @@
+export type CardNumbers = [string, string, string, string] | [string, string, string];
+export type SegmentCount = 3 | 4;
 export type CardBrand = 'VISA' | 'MASTER' | 'AMEX' | 'DINERS' | 'UNIONPAY';
-
 export type CardBrandOrNone = CardBrand | 'NONE';
-
-export type CardNumbersSegments = [string, string, string, string] | [string, string, string];
-
 export interface CardBrandRule {
   brand: CardBrand;
   totalLength: number;
@@ -22,16 +20,15 @@ export type KoreanCardCompany =
   | 'HANA'
   | 'KB';
 
+export type ExpirationDate = { month: string; year: string };
+export type ExpirationDateList = [string, string];
+
 export interface InputFieldConfig {
   sectionTitle: string;
   hintText?: string;
   label: string;
-  placeholder: string[];
+  placeholder: readonly string[];
 }
-
-export type CardNumbers = [string, string, string, string];
-export type ExpirationDate = { month: string; year: string };
-export type ExpirationDateList = [string, string];
 
 export type ValidatorResult = {
   error: boolean;
