@@ -8,7 +8,7 @@ import { ValidatorResult } from '../../types';
 interface InputFieldFormProps<T> {
   id: string;
   label: string;
-  placeholderArr: string[];
+  placeholderArr: readonly string[];
   fieldMaxLength: number;
   value: T;
   validator: (inputValue: string, index: number) => ValidatorResult;
