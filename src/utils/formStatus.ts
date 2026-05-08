@@ -21,3 +21,7 @@ export const isExpirationDateComplete = (date: ExpirationDate): boolean => {
 export const isCvcComplete = (cvc: string, cardBrand: CardBrandOrNone): boolean => {
   return cvc.length === getCvcLength(cardBrand);
 };
+
+export const isPasswordComplete = (password: string): boolean => {
+  return password.length === VALIDATION_RULE.PASSWORD_LENGTH;
+};
