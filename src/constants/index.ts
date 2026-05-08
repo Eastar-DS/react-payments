@@ -1,4 +1,10 @@
-import type { CardBrand, CardBrandOrNone, CardBrandRule, InputFieldConfig, KoreanCardCompany } from '../types';
+import type {
+  CardBrand,
+  CardBrandOrNone,
+  CardBrandRule,
+  InputFieldConfig,
+  KoreanCardCompany,
+} from '../types';
 import visaIcon from '../assets/visa.svg';
 import masterIcon from '../assets/mastercard.svg';
 import amexIcon from '../assets/american-express.svg';
@@ -55,18 +61,15 @@ export const BRAND_LOGO_MAP: Record<CardBrandOrNone, string> = {
 export const DEFAULT_SEGMENT_LENGTHS = [4, 4, 4, 4] as const;
 export const DEFAULT_CVC_LENGTH = 3 as const;
 
-export const KOREAN_CARD_COMPANIES: Record<
-  KoreanCardCompany,
-  { label: string; color: string }
-> = {
-  BC:         { label: 'BC카드',     color: '#F04651' },
-  SHINHAN:    { label: '신한카드',   color: '#0046FF' },
+export const KOREAN_CARD_COMPANIES: Record<KoreanCardCompany, { label: string; color: string }> = {
+  BC: { label: 'BC카드', color: '#F04651' },
+  SHINHAN: { label: '신한카드', color: '#0046FF' },
   KAKAO_BANK: { label: '카카오뱅크', color: '#FFE600' },
-  HYUNDAI:    { label: '현대카드',   color: '#000000' },
-  WOORI:      { label: '우리카드',   color: '#007BC8' },
-  LOTTE:      { label: '롯데카드',   color: '#ED1C24' },
-  HANA:       { label: '하나카드',   color: '#009490' },
-  KB:         { label: '국민카드',   color: '#6A6056' },
+  HYUNDAI: { label: '현대카드', color: '#000000' },
+  WOORI: { label: '우리카드', color: '#007BC8' },
+  LOTTE: { label: '롯데카드', color: '#ED1C24' },
+  HANA: { label: '하나카드', color: '#009490' },
+  KB: { label: '국민카드', color: '#6A6056' },
 } as const;
 
 export const ERROR_MESSAGE = {
@@ -75,6 +78,7 @@ export const ERROR_MESSAGE = {
   MAX_LENGTH: (length: number) => `숫자는 ${length}자리를 입력해야 합니다.`,
   INVALID_MONTH: '월은 1~12 사이의 숫자만 입력 가능합니다.',
   INVALID_YEAR: '년도는 현재 년도 이상만 입력 가능합니다.',
+  INVALID_EXPIRATION_DATE: '유효기간은 현재 이후여야 합니다.',
 } as const;
 
 export const INPUT_FIELD_CONFIG: Record<string, InputFieldConfig> = {
