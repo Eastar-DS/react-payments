@@ -6,10 +6,11 @@ import {
   cardNumbersValidator,
   makeCvcValidator,
   makeExpirationDateValidator,
+  passwordValidator,
 } from '../../utils/validate';
 
 import InputFieldForm from './InputFieldForm';
-import { INPUT_FIELD_CONFIG, KOREAN_CARD_COMPANIES } from '../../constants';
+import { INPUT_FIELD_CONFIG, KOREAN_CARD_COMPANIES, VALIDATION_RULE } from '../../constants';
 import { CardNumbers, ExpirationDate, KoreanCardCompany } from '../../types';
 import {
   detectCardBrand,
@@ -27,6 +28,7 @@ export default function PaymentForm() {
   const [cardCompany, setCardCompany] = useState<KoreanCardCompany | null>(null);
   const [expirationDate, setExpirationDate] = useState<ExpirationDate>({ month: '', year: '' });
   const [cvc, setCvc] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
 
   const cardBrand = detectCardBrand(joinUntilEmpty(cardNumbers));
   const segmentLengths = getSegmentLengths(cardBrand);
@@ -62,6 +64,10 @@ export default function PaymentForm() {
 
   const handleCvcChange = (value: string) => {
     setCvc(value);
+  };
+
+  const handlePasswordChange = (value: string) => {
+    setPassword(value);
   };
 
   return (
@@ -124,6 +130,22 @@ export default function PaymentForm() {
           values={[cvc]}
           validator={makeCvcValidator(cardBrand)}
           onChange={handleCvcChange}
+        />
+      </InputFieldLayout>
+
+      <InputFieldLayout
+        sectionTitle={INPUT_FIELD_CONFIG['PASSWORD'].sectionTitle}
+        hintText={INPUT_FIELD_CONFIG['PASSWORD'].hintText}
+      >
+        <InputFieldForm
+          id="password"
+          label={INPUT_FIELD_CONFIG['PASSWORD'].label}
+          placeholderArr={INPUT_FIELD_CONFIG['PASSWORD'].placeholder}
+          fieldMaxLengths={[VALIDATION_RULE.PASSWORD_LENGTH]}
+          values={[password]}
+          validator={passwordValidator}
+          onChange={handlePasswordChange}
+          inputType="password"
         />
       </InputFieldLayout>
     </FormContainer>
