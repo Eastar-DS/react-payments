@@ -1,6 +1,7 @@
-import { CARD_BRAND_RULES } from "../constants";
-import { CardNumbers } from "../types";
-import { detectCardBrand, joinUntilEmpty } from "./cardBrand";
+import { CARD_BRAND_RULES, VALIDATION_RULE } from '../constants';
+import { CardBrandOrNone, CardNumbers, ExpirationDate } from '../types';
+import { detectCardBrand, getCvcLength, joinUntilEmpty } from './cardBrand';
+import { isExpirationDateInFuture } from './validate';
 
 export function isCardNumbersComplete(cardNumbers: CardNumbers): boolean {
   const value = joinUntilEmpty(cardNumbers).replace(/\D/g, '');
@@ -8,3 +9,15 @@ export function isCardNumbersComplete(cardNumbers: CardNumbers): boolean {
   if (brand === 'NONE') return false;
   return value.length === CARD_BRAND_RULES[brand].totalLength;
 }
+
+export const isExpirationDateComplete = (date: ExpirationDate): boolean => {
+  if (date.month.length !== VALIDATION_RULE.EXPIRATION_DATE_LENGTH) return false;
+  if (date.year.length !== VALIDATION_RULE.EXPIRATION_DATE_LENGTH) return false;
+  const m = Number(date.month);
+  if (m < 1 || m > VALIDATION_RULE.MAX_MONTH) return false;
+  return isExpirationDateInFuture(date);
+};
+
+export const isCvcComplete = (cvc: string, cardBrand: CardBrandOrNone): boolean => {
+  return cvc.length === getCvcLength(cardBrand);
+};
