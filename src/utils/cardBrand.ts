@@ -28,7 +28,7 @@ export function detectCardBrand(rawValue: string): CardBrandOrNone {
   return 'NONE';
 }
 
-export function joinContinuous(cardNumbers: CardNumbers): string {
+export function joinUntilEmpty(cardNumbers: CardNumbers): string {
   const result: string[] = [];
   for (const seg of cardNumbers) {
     if (seg === '') break;
