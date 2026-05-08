@@ -103,7 +103,7 @@ export const INPUT_FIELD_CONFIG: Record<string, InputFieldConfig> = {
     sectionTitle: '비밀번호를 입력해 주세요',
     hintText: '앞의 2자리를 입력해주세요',
     label: '비밀번호 앞 2자리',
-    placeholder: ['•', '•'],
+    placeholder: [''],
   },
   CARD_COMPANY: {
     sectionTitle: '카드사를 선택해 주세요',
