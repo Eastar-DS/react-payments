@@ -5,29 +5,43 @@ import InputFieldLayout from '../Layout/InputFieldLayout';
 import { cardNumbersValidator, expirationDateValidator } from '../../utils/validate';
 import CVCFieldForm from './CVCFieldForm';
 import InputFieldForm from './InputFieldForm';
-import { INPUT_FIELD_CONFIG } from '../../constants';
-import { CardNumbers, ExpirationDate } from '../../types';
-import { detectCardBrand, getSegmentLengths, replaceSegmentAt, reshapeCardNumbers } from '../../utils/cardBrand';
+import { INPUT_FIELD_CONFIG, KOREAN_CARD_COMPANIES } from '../../constants';
+import { CardNumbers, ExpirationDate, KoreanCardCompany } from '../../types';
+import {
+  detectCardBrand,
+  getSegmentLengths,
+  joinUntilEmpty,
+  replaceSegmentAt,
+  reshapeCardNumbers,
+} from '../../utils/cardBrand';
+import { isCardNumbersComplete } from '../../utils/formStatus';
+import CardCompanyFieldForm from './CardCompanyFieldForm';
 
 export default function PaymentForm() {
   const [cardNumbers, setCardNumbers] = useState<CardNumbers>(['', '', '', '']);
+  const [cardCompany, setCardCompany] = useState<KoreanCardCompany | null>(null);
   const [expirationDate, setExpirationDate] = useState<ExpirationDate>({ month: '', year: '' });
 
-  const cardBrand = detectCardBrand(cardNumbers.join(''));
+  const cardBrand = detectCardBrand(joinUntilEmpty(cardNumbers));
   const segmentLengths = getSegmentLengths(cardBrand);
+
+  const showCardCompany = isCardNumbersComplete(cardNumbers);
+  const previewBackgroundColor = cardCompany ? KOREAN_CARD_COMPANIES[cardCompany].color : '#333333';
 
   const handleSegmentChange = (value: string, index: number) => {
     const next = replaceSegmentAt(cardNumbers, index, value);
 
-    const newBrand = detectCardBrand(next.join(''));
+    const newBrand = detectCardBrand(joinUntilEmpty(next));
     const newSegmentLengths = getSegmentLengths(newBrand);
 
     const adjusted: CardNumbers =
-      next.length === newSegmentLengths.length
-        ? next
-        : reshapeCardNumbers(next, newSegmentLengths);
+      next.length === newSegmentLengths.length ? next : reshapeCardNumbers(next, newSegmentLengths);
 
     setCardNumbers(adjusted);
+  };
+
+  const handleCardCompanyChange = (value: KoreanCardCompany) => {
+    setCardCompany(value);
   };
 
   const handleExpirationDateChange = (value: string, index: number) => {
@@ -46,7 +60,20 @@ export default function PaymentForm() {
         cardBrand={cardBrand}
         cardNumberList={cardNumbers}
         expirationDate={`${expirationDate['month']}/${expirationDate['year']}`}
+        backgroundColor={previewBackgroundColor}
       />
+
+      {showCardCompany && (
+        <InputFieldLayout sectionTitle={INPUT_FIELD_CONFIG['CARD_COMPANY'].sectionTitle}>
+          <CardCompanyFieldForm
+            id="cardCompany"
+            label={INPUT_FIELD_CONFIG['CARD_COMPANY'].label}
+            placeholder={INPUT_FIELD_CONFIG['CARD_COMPANY'].placeholder[0]}
+            value={cardCompany}
+            onChange={handleCardCompanyChange}
+          />
+        </InputFieldLayout>
+      )}
 
       <InputFieldLayout
         sectionTitle={INPUT_FIELD_CONFIG['CARD_NUMBERS'].sectionTitle}
@@ -71,7 +98,7 @@ export default function PaymentForm() {
           id="expirationDate"
           label={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].label}
           placeholderArr={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].placeholder}
-          fieldMaxLengths={[2,2]}
+          fieldMaxLengths={[2, 2]}
           values={[expirationDate.month, expirationDate.year]}
           validator={expirationDateValidator}
           onChange={handleExpirationDateChange}
