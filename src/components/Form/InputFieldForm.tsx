@@ -11,6 +11,7 @@ interface InputFieldFormProps {
   placeholderArr: readonly string[];
   fieldMaxLengths: readonly number[];
   values: readonly string[];
+  inputType?: 'text' | 'password';
   validator: (inputValue: string, index: number) => ValidatorResult;
   onChange: (value: string, index: number) => void;
 }
@@ -21,6 +22,7 @@ export default function InputFieldForm({
   placeholderArr,
   fieldMaxLengths,
   values,
+  inputType,
   validator,
   onChange,
 }: InputFieldFormProps) {
@@ -57,6 +59,7 @@ export default function InputFieldForm({
             index={index}
             numbers={numbers}
             fieldMaxLength={fieldMaxLengths[index]}
+            inputType={inputType}
             validator={validator}
             onChange={handleFieldChange}
             onFocus={handleFocus}

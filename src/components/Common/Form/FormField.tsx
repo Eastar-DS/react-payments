@@ -10,11 +10,12 @@ interface FormFieldProps {
   index: number;
   numbers: string;
   fieldMaxLength: number;
+  placeholder: string;
+  inputType?: 'text' | 'password';
   validator: (value: string, index: number) => ValidatorResult;
   onChange: (value: string, index: number, validation: ValidationResult) => void;
   onFocus: (validation: ValidationResult) => void;
   onBlur: () => void;
-  placeholder: string;
 }
 
 export default function FormField({
@@ -22,11 +23,12 @@ export default function FormField({
   index,
   numbers,
   fieldMaxLength,
+  placeholder,
+  inputType = 'text',
   validator,
   onChange,
   onFocus,
   onBlur,
-  placeholder,
 }: FormFieldProps) {
   const [isError, setIsError] = useState<boolean>(false);
 
@@ -63,7 +65,7 @@ export default function FormField({
       <InputField
         isError={isError}
         id={index === 0 ? id : String(index)}
-        type="text"
+        type={inputType}
         maxLength={fieldMaxLength}
         inputMode="numeric"
         autoComplete="off"
