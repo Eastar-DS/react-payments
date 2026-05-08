@@ -2,13 +2,18 @@ import { useState } from 'react';
 import styled from '@emotion/styled';
 import CardPreview from '../CardPreview/CardPreview';
 import InputFieldLayout from '../Layout/InputFieldLayout';
-import { cardNumbersValidator, expirationDateValidator } from '../../utils/validate';
-import CVCFieldForm from './CVCFieldForm';
+import {
+  cardNumbersValidator,
+  makeCvcValidator,
+  makeExpirationDateValidator,
+} from '../../utils/validate';
+
 import InputFieldForm from './InputFieldForm';
 import { INPUT_FIELD_CONFIG, KOREAN_CARD_COMPANIES } from '../../constants';
 import { CardNumbers, ExpirationDate, KoreanCardCompany } from '../../types';
 import {
   detectCardBrand,
+  getCvcLength,
   getSegmentLengths,
   joinUntilEmpty,
   replaceSegmentAt,
@@ -21,6 +26,7 @@ export default function PaymentForm() {
   const [cardNumbers, setCardNumbers] = useState<CardNumbers>(['', '', '', '']);
   const [cardCompany, setCardCompany] = useState<KoreanCardCompany | null>(null);
   const [expirationDate, setExpirationDate] = useState<ExpirationDate>({ month: '', year: '' });
+  const [cvc, setCvc] = useState<string>('');
 
   const cardBrand = detectCardBrand(joinUntilEmpty(cardNumbers));
   const segmentLengths = getSegmentLengths(cardBrand);
@@ -52,6 +58,10 @@ export default function PaymentForm() {
       newExpirationDate[key] = value;
       return newExpirationDate;
     });
+  };
+
+  const handleCvcChange = (value: string) => {
+    setCvc(value);
   };
 
   return (
@@ -100,13 +110,21 @@ export default function PaymentForm() {
           placeholderArr={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].placeholder}
           fieldMaxLengths={[2, 2]}
           values={[expirationDate.month, expirationDate.year]}
-          validator={expirationDateValidator}
+          validator={makeExpirationDateValidator(expirationDate)}
           onChange={handleExpirationDateChange}
         />
       </InputFieldLayout>
 
       <InputFieldLayout sectionTitle={INPUT_FIELD_CONFIG['CVC'].sectionTitle}>
-        <CVCFieldForm />
+        <InputFieldForm
+          id="cvc"
+          label={INPUT_FIELD_CONFIG['CVC'].label}
+          placeholderArr={INPUT_FIELD_CONFIG['CVC'].placeholder}
+          fieldMaxLengths={[getCvcLength(cardBrand)]}
+          values={[cvc]}
+          validator={makeCvcValidator(cardBrand)}
+          onChange={handleCvcChange}
+        />
       </InputFieldLayout>
     </FormContainer>
   );
