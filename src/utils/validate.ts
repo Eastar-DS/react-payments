@@ -6,10 +6,11 @@ import { getCvcLength } from './cardBrand';
 export const validateNaN = (inputValue: string) => isNaN(Number(inputValue));
 
 // 카드번호 칸 단위 검증은 비움.
-export const cardNumbersValidator = (_inputValue: string) => {
+export const cardNumbersValidator = () => {
   return { error: false, errorMessage: '' };
 };
 
+// 유효기간
 export const isExpirationDateInFuture = ({ month, year }: ExpirationDate): boolean => {
   if (month.length !== VALIDATION_RULE.EXPIRATION_DATE_LENGTH) return false;
   if (year.length !== VALIDATION_RULE.EXPIRATION_DATE_LENGTH) return false;
@@ -60,6 +61,7 @@ export const makeExpirationDateValidator =
     return { error: false, errorMessage: '' };
   };
 
+// cvc
 export const makeCvcValidator =
   (cardBrand: CardBrandOrNone) =>
   (value: string): ValidatorResult => {
@@ -72,3 +74,18 @@ export const makeCvcValidator =
     }
     return { error: false, errorMessage: '' };
   };
+
+// 비밀번호
+export const passwordValidator = (inputValue: string): ValidatorResult => {
+  if (validateNaN(inputValue)) {
+    return { error: true, errorMessage: ERROR_MESSAGE.NAN };
+  }
+  // 길이는 input maxLength로 차단 — 안전망
+  if (inputValue.length > VALIDATION_RULE.PASSWORD_LENGTH) {
+    return {
+      error: true,
+      errorMessage: ERROR_MESSAGE.MAX_LENGTH(VALIDATION_RULE.PASSWORD_LENGTH),
+    };
+  }
+  return { error: false, errorMessage: '' };
+};
