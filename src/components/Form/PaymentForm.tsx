@@ -10,7 +10,7 @@ import {
 } from '../../utils/validate';
 
 import InputFieldForm from './InputFieldForm';
-import { INPUT_FIELD_CONFIG, KOREAN_CARD_COMPANIES, VALIDATION_RULE } from '../../constants';
+import { INPUT_FIELD_CONFIG, KOREAN_CARD_COMPANIES, ROUTES, VALIDATION_RULE } from '../../constants';
 import { CardNumbers, ExpirationDate, KoreanCardCompany } from '../../types';
 import {
   detectCardBrand,
@@ -20,10 +20,13 @@ import {
   replaceSegmentAt,
   reshapeCardNumbers,
 } from '../../utils/cardBrand';
-import { isCardNumbersComplete, isCvcComplete, isExpirationDateComplete } from '../../utils/formStatus';
+import { isCardNumbersComplete, isCvcComplete, isExpirationDateComplete, isPasswordComplete } from '../../utils/formStatus';
 import CardCompanyFieldForm from './CardCompanyFieldForm';
+import { useNavigate } from 'react-router';
+import SubmitButton from '../Common/Button/SubmitButton';
 
 export default function PaymentForm() {
+  const navigate = useNavigate();
   const [cardNumbers, setCardNumbers] = useState<CardNumbers>(['', '', '', '']);
   const [cardCompany, setCardCompany] = useState<KoreanCardCompany | null>(null);
   const [expirationDate, setExpirationDate] = useState<ExpirationDate>({ month: '', year: '' });
@@ -39,6 +42,8 @@ export default function PaymentForm() {
   const showExpiration = showCardCompany && cardCompany !== null;
   const showCvc = showExpiration && isExpirationDateComplete(expirationDate);
   const showPassword = showCvc && isCvcComplete(cvc, cardBrand);
+  
+  const isFormValid = showPassword && isPasswordComplete(password);
 
   const handleSegmentChange = (value: string, index: number) => {
     const next = replaceSegmentAt(cardNumbers, index, value);
@@ -72,6 +77,16 @@ export default function PaymentForm() {
 
   const handlePasswordChange = (value: string) => {
     setPassword(value);
+  };
+
+  const handleSubmit = () => {
+    if (!isFormValid || !cardCompany) return;
+    navigate(ROUTES.COMPLETE, {
+      state: {
+        cardNumberPrefix: cardNumbers[0],
+        cardCompanyName: KOREAN_CARD_COMPANIES[cardCompany].label,
+      },
+    })
   };
 
   return (
@@ -157,6 +172,10 @@ export default function PaymentForm() {
           onChange={handleSegmentChange}
         />
       </InputFieldLayout>
+
+      {isFormValid && (
+        <SubmitButton disabled={!isFormValid} onClick={handleSubmit}>확인</SubmitButton>
+      )}
     </FormContainer>
   );
 }
