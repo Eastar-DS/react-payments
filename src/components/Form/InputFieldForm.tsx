@@ -26,8 +26,11 @@ export default function InputFieldForm({
   validator,
   onChange,
 }: InputFieldFormProps) {
-  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
+
+  const errorMessage =
+    focusedIndex !== null ? validator(values[focusedIndex], focusedIndex).errorMessage : '';
 
   const focusNextField = (value: string, currentIndex: number) => {
     const isFilled = value.length === fieldMaxLengths[currentIndex];
@@ -42,19 +45,18 @@ export default function InputFieldForm({
     index: number,
     validation: { error: boolean; errorMessage: string; block: boolean }
   ) => {
-    setErrorMessage(validation.errorMessage);
-    if (!validation.block) {
-      onChange(value, index);
-      focusNextField(value, index);
-    }
+    if (validation.block) return;
+
+    onChange(value, index);
+    focusNextField(value, index);
   };
 
-  const handleFocus = (validation: { error: boolean; errorMessage: string; block: boolean }) => {
-    setErrorMessage(validation.errorMessage);
+  const handleFocus = (index: number) => {
+    setFocusedIndex(index);
   };
 
   const handleBlur = () => {
-    setErrorMessage('');
+    setFocusedIndex(null);
   };
 
   return (
@@ -70,10 +72,12 @@ export default function InputFieldForm({
             numbers={numbers}
             fieldMaxLength={fieldMaxLengths[index]}
             inputType={inputType}
-            inputRef={(el) => {inputRefs.current[index] = el;}}
+            inputRef={(el) => {
+              inputRefs.current[index] = el;
+            }}
             validator={validator}
             onChange={handleFieldChange}
-            onFocus={handleFocus}
+            onFocus={() => handleFocus(index)}
             onBlur={handleBlur}
             placeholder={placeholderArr[index]}
           />

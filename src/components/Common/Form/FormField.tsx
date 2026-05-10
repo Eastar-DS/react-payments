@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent, useState } from 'react';
+import { ChangeEvent } from 'react';
 import styled from '@emotion/styled';
 import InputField from '../InputField/InputField';
 import { validateNaN } from '../../../utils/validate';
@@ -15,7 +15,7 @@ interface FormFieldProps {
   inputRef?: (el: HTMLInputElement | null) => void;
   validator: (value: string, index: number) => ValidatorResult;
   onChange: (value: string, index: number, validation: ValidationResult) => void;
-  onFocus: (validation: ValidationResult) => void;
+  onFocus: () => void;
   onBlur: () => void;
 }
 
@@ -32,34 +32,19 @@ export default function FormField({
   onFocus,
   onBlur,
 }: FormFieldProps) {
-  const [isError, setIsError] = useState<boolean>(false);
+  const isError = numbers.length > 0 && validator(numbers, index).error;
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
 
     if (validateNaN(value)) {
-      setIsError(true);
       onChange(value, index, { error: true, errorMessage: ERROR_MESSAGE.NAN, block: true });
       return;
     }
 
     const { error, errorMessage } = validator(value, index);
 
-    setIsError(error);
-
     onChange(value, index, { error, errorMessage, block: false });
-  };
-
-  const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
-    if (e.target.value.trim().length === 0) return;
-
-    const { error, errorMessage } = validator(e.target.value, index);
-    onFocus({ error, errorMessage, block: false });
-  };
-
-  const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
-    if (e.target.value === '') setIsError(false);
-    onBlur();
   };
 
   return (
@@ -75,8 +60,8 @@ export default function FormField({
         value={numbers}
         placeholder={placeholder}
         onChange={handleChange}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
+        onFocus={onFocus}
+        onBlur={onBlur}
       />
     </FormFieldContainer>
   );
