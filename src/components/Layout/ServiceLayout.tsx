@@ -16,5 +16,5 @@ const Layout = styled.div`
   width: 376px;
   height: 100vh;
   padding: 77px 30px 19px 30px;
-  border: 1px solid #dddcdc;
- `;
+  /* border: 1px solid #dddcdc; */
+`;

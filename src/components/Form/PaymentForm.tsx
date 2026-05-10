@@ -10,7 +10,12 @@ import {
 } from '../../utils/validate';
 
 import InputFieldForm from './InputFieldForm';
-import { INPUT_FIELD_CONFIG, KOREAN_CARD_COMPANIES, ROUTES, VALIDATION_RULE } from '../../constants';
+import {
+  INPUT_FIELD_CONFIG,
+  KOREAN_CARD_COMPANIES,
+  ROUTES,
+  VALIDATION_RULE,
+} from '../../constants';
 import { CardNumbers, ExpirationDate, KoreanCardCompany } from '../../types';
 import {
   detectCardBrand,
@@ -20,7 +25,12 @@ import {
   replaceSegmentAt,
   reshapeCardNumbers,
 } from '../../utils/cardBrand';
-import { isCardNumbersComplete, isCvcComplete, isExpirationDateComplete, isPasswordComplete } from '../../utils/formStatus';
+import {
+  isCardNumbersComplete,
+  isCvcComplete,
+  isExpirationDateComplete,
+  isPasswordComplete,
+} from '../../utils/formStatus';
 import CardCompanyFieldForm from './CardCompanyFieldForm';
 import { useNavigate } from 'react-router';
 import SubmitButton from '../Common/Button/SubmitButton';
@@ -42,7 +52,7 @@ export default function PaymentForm() {
   const showExpiration = showCardCompany && cardCompany !== null;
   const showCvc = showExpiration && isExpirationDateComplete(expirationDate);
   const showPassword = showCvc && isCvcComplete(cvc, cardBrand);
-  
+
   const isFormValid = showPassword && isPasswordComplete(password);
 
   const handleSegmentChange = (value: string, index: number) => {
@@ -86,7 +96,7 @@ export default function PaymentForm() {
         cardNumberPrefix: cardNumbers[0],
         cardCompanyName: KOREAN_CARD_COMPANIES[cardCompany].label,
       },
-    })
+    });
   };
 
   return (
@@ -174,7 +184,11 @@ export default function PaymentForm() {
       </InputFieldLayout>
 
       {isFormValid && (
-        <SubmitButton disabled={!isFormValid} onClick={handleSubmit}>확인</SubmitButton>
+        <SubmitButtonContainer>
+          <SubmitButton disabled={!isFormValid} onClick={handleSubmit}>
+            확인
+          </SubmitButton>
+        </SubmitButtonContainer>
       )}
     </FormContainer>
   );
@@ -185,4 +199,13 @@ const FormContainer = styled.form`
   flex-direction: column;
   align-items: center;
   gap: 45px;
+`;
+
+const SubmitButtonContainer = styled.div`
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  margin-top: auto;
+  padding: 12px 0;
+  background: #fff;
 `;
