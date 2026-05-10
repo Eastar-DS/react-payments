@@ -1,13 +1,37 @@
 import { ERROR_MESSAGE, VALIDATION_RULE } from '../constants';
-import { CardBrandOrNone, ExpirationDate, ValidatorResult } from '../types';
-import { getCvcLength } from './cardBrand';
+import { CardBrandOrNone, CardNumbers, ExpirationDate, ValidatorResult } from '../types';
+import { detectCardBrand, getCvcLength, joinUntilEmpty } from './cardBrand';
 
 // 숫자 외의 값이 입력되는 경우 검증
 export const validateNaN = (inputValue: string) => isNaN(Number(inputValue));
 
-// 카드번호 칸 단위 검증은 비움.
-export const cardNumbersValidator = () => {
-  return { error: false, errorMessage: '' };
+export const makeCardNumbersValidator = (
+  cardNumbers: CardNumbers,
+  segmentsLengths: readonly number[]
+) => {
+  return (value: string, index: number): ValidatorResult => {
+    if (value.length > 0 && value.length < segmentsLengths[index]) {
+      return {
+        error: true,
+        errorMessage: ERROR_MESSAGE.MAX_LENGTH(segmentsLengths[index]),
+      };
+    }
+
+    const next = cardNumbers.map((segment, segmentIndex) =>
+      segmentIndex === index ? value : segment
+    ) as CardNumbers;
+
+    const joined = joinUntilEmpty(next);
+
+    if (joined.length > 0 && detectCardBrand(joined) === 'NONE') {
+      return {
+        error: true,
+        errorMessage: ERROR_MESSAGE.INVALID_CARD_BRAND_NUMBER,
+      };
+    }
+
+    return { error: false, errorMessage: '' };
+  };
 };
 
 // 유효기간

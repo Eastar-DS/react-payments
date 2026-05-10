@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import CardPreview from '../CardPreview/CardPreview';
 import InputFieldLayout from '../Layout/InputFieldLayout';
 import {
-  cardNumbersValidator,
+  makeCardNumbersValidator,
   makeCvcValidator,
   makeExpirationDateValidator,
   passwordValidator,
@@ -178,7 +178,7 @@ export default function PaymentForm() {
           placeholderArr={INPUT_FIELD_CONFIG['CARD_NUMBERS'].placeholder}
           fieldMaxLengths={segmentLengths}
           values={cardNumbers}
-          validator={cardNumbersValidator}
+          validator={makeCardNumbersValidator(cardNumbers, segmentLengths)}
           onChange={handleSegmentChange}
         />
       </InputFieldLayout>
