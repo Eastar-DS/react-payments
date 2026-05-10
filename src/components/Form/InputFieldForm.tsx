@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import FormField from '../Common/Form/FormField';
 import Label from '../Common/Label/Label';
 import ErrorMessage from '../Common/ErrorMessage/ErrorMessage';
@@ -27,6 +27,15 @@ export default function InputFieldForm({
   onChange,
 }: InputFieldFormProps) {
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
+
+  const focusNextField = (value: string, currentIndex: number) => {
+    const isFilled = value.length === fieldMaxLengths[currentIndex];
+    const hasNext = currentIndex < values.length - 1;
+    if (isFilled && hasNext) {
+      inputRefs.current[currentIndex + 1]?.focus();
+    }
+  };
 
   const handleFieldChange = (
     value: string,
@@ -36,6 +45,7 @@ export default function InputFieldForm({
     setErrorMessage(validation.errorMessage);
     if (!validation.block) {
       onChange(value, index);
+      focusNextField(value, index);
     }
   };
 
@@ -60,6 +70,7 @@ export default function InputFieldForm({
             numbers={numbers}
             fieldMaxLength={fieldMaxLengths[index]}
             inputType={inputType}
+            inputRef={(el) => {inputRefs.current[index] = el;}}
             validator={validator}
             onChange={handleFieldChange}
             onFocus={handleFocus}
