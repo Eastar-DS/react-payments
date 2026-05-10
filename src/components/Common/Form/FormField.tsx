@@ -12,6 +12,7 @@ interface FormFieldProps {
   fieldMaxLength: number;
   placeholder: string;
   inputType?: 'text' | 'password';
+  inputRef?: (el: HTMLInputElement | null) => void;
   validator: (value: string, index: number) => ValidatorResult;
   onChange: (value: string, index: number, validation: ValidationResult) => void;
   onFocus: (validation: ValidationResult) => void;
@@ -25,6 +26,7 @@ export default function FormField({
   fieldMaxLength,
   placeholder,
   inputType = 'text',
+  inputRef,
   validator,
   onChange,
   onFocus,
@@ -68,6 +70,7 @@ export default function FormField({
         type={inputType}
         maxLength={fieldMaxLength}
         inputMode="numeric"
+        ref={inputRef}
         autoComplete="off"
         value={numbers}
         placeholder={placeholder}
