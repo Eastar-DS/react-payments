@@ -20,7 +20,7 @@ import {
   replaceSegmentAt,
   reshapeCardNumbers,
 } from '../../utils/cardBrand';
-import { isCardNumbersComplete } from '../../utils/formStatus';
+import { isCardNumbersComplete, isCvcComplete, isExpirationDateComplete } from '../../utils/formStatus';
 import CardCompanyFieldForm from './CardCompanyFieldForm';
 
 export default function PaymentForm() {
@@ -33,8 +33,12 @@ export default function PaymentForm() {
   const cardBrand = detectCardBrand(joinUntilEmpty(cardNumbers));
   const segmentLengths = getSegmentLengths(cardBrand);
 
-  const showCardCompany = isCardNumbersComplete(cardNumbers);
   const previewBackgroundColor = cardCompany ? KOREAN_CARD_COMPANIES[cardCompany].color : '#333333';
+
+  const showCardCompany = isCardNumbersComplete(cardNumbers);
+  const showExpiration = showCardCompany && cardCompany !== null;
+  const showCvc = showExpiration && isExpirationDateComplete(expirationDate);
+  const showPassword = showCvc && isCvcComplete(cvc, cardBrand);
 
   const handleSegmentChange = (value: string, index: number) => {
     const next = replaceSegmentAt(cardNumbers, index, value);
@@ -78,6 +82,54 @@ export default function PaymentForm() {
         expirationDate={`${expirationDate['month']}/${expirationDate['year']}`}
         backgroundColor={previewBackgroundColor}
       />
+      {showPassword && (
+        <InputFieldLayout
+          sectionTitle={INPUT_FIELD_CONFIG['PASSWORD'].sectionTitle}
+          hintText={INPUT_FIELD_CONFIG['PASSWORD'].hintText}
+        >
+          <InputFieldForm
+            id="password"
+            label={INPUT_FIELD_CONFIG['PASSWORD'].label}
+            placeholderArr={INPUT_FIELD_CONFIG['PASSWORD'].placeholder}
+            fieldMaxLengths={[VALIDATION_RULE.PASSWORD_LENGTH]}
+            values={[password]}
+            validator={passwordValidator}
+            onChange={handlePasswordChange}
+            inputType="password"
+          />
+        </InputFieldLayout>
+      )}
+
+      {showCvc && (
+        <InputFieldLayout sectionTitle={INPUT_FIELD_CONFIG['CVC'].sectionTitle}>
+          <InputFieldForm
+            id="cvc"
+            label={INPUT_FIELD_CONFIG['CVC'].label}
+            placeholderArr={INPUT_FIELD_CONFIG['CVC'].placeholder}
+            fieldMaxLengths={[getCvcLength(cardBrand)]}
+            values={[cvc]}
+            validator={makeCvcValidator(cardBrand)}
+            onChange={handleCvcChange}
+          />
+        </InputFieldLayout>
+      )}
+
+      {showExpiration && (
+        <InputFieldLayout
+          sectionTitle={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].sectionTitle}
+          hintText={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].hintText}
+        >
+          <InputFieldForm
+            id="expirationDate"
+            label={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].label}
+            placeholderArr={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].placeholder}
+            fieldMaxLengths={[2, 2]}
+            values={[expirationDate.month, expirationDate.year]}
+            validator={makeExpirationDateValidator(expirationDate)}
+            onChange={handleExpirationDateChange}
+          />
+        </InputFieldLayout>
+      )}
 
       {showCardCompany && (
         <InputFieldLayout sectionTitle={INPUT_FIELD_CONFIG['CARD_COMPANY'].sectionTitle}>
@@ -103,49 +155,6 @@ export default function PaymentForm() {
           values={cardNumbers}
           validator={cardNumbersValidator}
           onChange={handleSegmentChange}
-        />
-      </InputFieldLayout>
-
-      <InputFieldLayout
-        sectionTitle={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].sectionTitle}
-        hintText={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].hintText}
-      >
-        <InputFieldForm
-          id="expirationDate"
-          label={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].label}
-          placeholderArr={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].placeholder}
-          fieldMaxLengths={[2, 2]}
-          values={[expirationDate.month, expirationDate.year]}
-          validator={makeExpirationDateValidator(expirationDate)}
-          onChange={handleExpirationDateChange}
-        />
-      </InputFieldLayout>
-
-      <InputFieldLayout sectionTitle={INPUT_FIELD_CONFIG['CVC'].sectionTitle}>
-        <InputFieldForm
-          id="cvc"
-          label={INPUT_FIELD_CONFIG['CVC'].label}
-          placeholderArr={INPUT_FIELD_CONFIG['CVC'].placeholder}
-          fieldMaxLengths={[getCvcLength(cardBrand)]}
-          values={[cvc]}
-          validator={makeCvcValidator(cardBrand)}
-          onChange={handleCvcChange}
-        />
-      </InputFieldLayout>
-
-      <InputFieldLayout
-        sectionTitle={INPUT_FIELD_CONFIG['PASSWORD'].sectionTitle}
-        hintText={INPUT_FIELD_CONFIG['PASSWORD'].hintText}
-      >
-        <InputFieldForm
-          id="password"
-          label={INPUT_FIELD_CONFIG['PASSWORD'].label}
-          placeholderArr={INPUT_FIELD_CONFIG['PASSWORD'].placeholder}
-          fieldMaxLengths={[VALIDATION_RULE.PASSWORD_LENGTH]}
-          values={[password]}
-          validator={passwordValidator}
-          onChange={handlePasswordChange}
-          inputType="password"
         />
       </InputFieldLayout>
     </FormContainer>
