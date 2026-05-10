@@ -117,3 +117,8 @@ export const VALIDATION_RULE = {
   PASSWORD_LENGTH: 2,
   MAX_MONTH: 12,
 } as const;
+
+export const ROUTES = {
+  HOME: '/',
+  COMPLETE: '/complete',
+} as const;
