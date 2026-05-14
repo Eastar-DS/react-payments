@@ -103,7 +103,7 @@ export default function PaymentForm() {
     <FormContainer>
       <CardPreview
         cardBrand={cardBrand}
-        cardNumberList={cardNumbers}
+        cardNumbers={cardNumbers}
         expirationDate={`${expirationDate['month']}/${expirationDate['year']}`}
         backgroundColor={previewBackgroundColor}
       />
@@ -115,7 +115,7 @@ export default function PaymentForm() {
           <InputFieldGroup
             id="password"
             label={INPUT_FIELD_CONFIG['PASSWORD'].label}
-            placeholderArr={INPUT_FIELD_CONFIG['PASSWORD'].placeholder}
+            placeholders={INPUT_FIELD_CONFIG['PASSWORD'].placeholder}
             fieldMaxLengths={[VALIDATION_RULE.PASSWORD_LENGTH]}
             values={[password]}
             validator={passwordValidator}
@@ -130,7 +130,7 @@ export default function PaymentForm() {
           <InputFieldGroup
             id="cvc"
             label={INPUT_FIELD_CONFIG['CVC'].label}
-            placeholderArr={INPUT_FIELD_CONFIG['CVC'].placeholder}
+            placeholders={INPUT_FIELD_CONFIG['CVC'].placeholder}
             fieldMaxLengths={[getCvcLength(cardBrand)]}
             values={[cvc]}
             validator={makeCvcValidator(cardBrand)}
@@ -147,7 +147,7 @@ export default function PaymentForm() {
           <InputFieldGroup
             id="expirationDate"
             label={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].label}
-            placeholderArr={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].placeholder}
+            placeholders={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].placeholder}
             fieldMaxLengths={[2, 2]}
             values={[expirationDate.month, expirationDate.year]}
             validator={makeExpirationDateValidator(expirationDate)}
@@ -175,7 +175,7 @@ export default function PaymentForm() {
         <InputFieldGroup
           id="cardNumbers"
           label={INPUT_FIELD_CONFIG['CARD_NUMBERS'].label}
-          placeholderArr={INPUT_FIELD_CONFIG['CARD_NUMBERS'].placeholder}
+          placeholders={INPUT_FIELD_CONFIG['CARD_NUMBERS'].placeholder}
           fieldMaxLengths={segmentLengths}
           values={cardNumbers}
           validator={makeCardNumbersValidator(cardNumbers, segmentLengths)}

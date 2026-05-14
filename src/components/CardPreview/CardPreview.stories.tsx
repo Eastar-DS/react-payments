@@ -17,7 +17,7 @@ const meta = {
   tags: ['autodocs'],
 
   argTypes: {
-    cardNumberList: {
+    cardNumbers: {
       control: 'object',
       description: '카드번호 prop입니다',
       table: {
@@ -39,7 +39,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    cardNumberList: ['1234', '1234', '1234', '1234'],
+    cardNumbers: ['1234', '1234', '1234', '1234'],
     expirationDate: '12/31',
     cardBrand: 'NONE',
   },
@@ -47,7 +47,7 @@ export const Default: Story = {
 
 export const Visa: Story = {
   args: {
-    cardNumberList: ['4234', '1234', '1234', '1234'],
+    cardNumbers: ['4234', '1234', '1234', '1234'],
     expirationDate: '12/31',
     cardBrand: 'VISA',
   },
@@ -55,7 +55,7 @@ export const Visa: Story = {
 
 export const Master: Story = {
   args: {
-    cardNumberList: ['5134', '1234', '1234', '1234'],
+    cardNumbers: ['5134', '1234', '1234', '1234'],
     expirationDate: '12/31',
     cardBrand: 'MASTER',
   },

@@ -8,7 +8,7 @@ import { ERROR_MESSAGE } from '../../../constants';
 interface InputFieldProps {
   id: string;
   index: number;
-  numbers: string;
+  value: string;
   fieldMaxLength: number;
   placeholder: string;
   inputType?: 'text' | 'password';
@@ -22,7 +22,7 @@ interface InputFieldProps {
 export default function InputField({
   id,
   index,
-  numbers,
+  value,
   fieldMaxLength,
   placeholder,
   inputType = 'text',
@@ -32,19 +32,19 @@ export default function InputField({
   onFocus,
   onBlur,
 }: InputFieldProps) {
-  const isError = numbers.length > 0 && validator(numbers, index).error;
+  const isError = value.length > 0 && validator(value, index).error;
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+    const inputValue = e.target.value;
 
-    if (validateNaN(value)) {
-      onChange(value, index, { error: true, errorMessage: ERROR_MESSAGE.NAN, block: true });
+    if (validateNaN(inputValue)) {
+      onChange(inputValue, index, { error: true, errorMessage: ERROR_MESSAGE.NAN, block: true });
       return;
     }
 
-    const { error, errorMessage } = validator(value, index);
+    const { error, errorMessage } = validator(inputValue, index);
 
-    onChange(value, index, { error, errorMessage, block: false });
+    onChange(inputValue, index, { error, errorMessage, block: false });
   };
 
   return (
@@ -57,7 +57,7 @@ export default function InputField({
         inputMode="numeric"
         ref={inputRef}
         autoComplete="off"
-        value={numbers}
+        value={value}
         placeholder={placeholder}
         onChange={handleChange}
         onFocus={onFocus}

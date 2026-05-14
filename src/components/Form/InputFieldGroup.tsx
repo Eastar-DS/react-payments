@@ -8,7 +8,7 @@ import { ValidatorResult } from '../../types';
 interface InputFieldGroupProps {
   id: string;
   label: string;
-  placeholderArr: readonly string[];
+  placeholders: readonly string[];
   fieldMaxLengths: readonly number[];
   values: readonly string[];
   inputType?: 'text' | 'password';
@@ -19,7 +19,7 @@ interface InputFieldGroupProps {
 export default function InputFieldGroup({
   id,
   label,
-  placeholderArr,
+  placeholders,
   fieldMaxLengths,
   values,
   inputType,
@@ -64,12 +64,12 @@ export default function InputFieldGroup({
       <Label htmlFor={id}>{label}</Label>
 
       <InputFieldWrapper>
-        {values.map((numbers, index) => (
+        {values.map((value, index) => (
           <InputField
             key={`${label}-${index}`}
             id={index === 0 ? id : String(index)}
             index={index}
-            numbers={numbers}
+            value={value}
             fieldMaxLength={fieldMaxLengths[index]}
             inputType={inputType}
             inputRef={(el) => {
@@ -79,7 +79,7 @@ export default function InputFieldGroup({
             onChange={handleFieldChange}
             onFocus={() => handleFocus(index)}
             onBlur={handleBlur}
-            placeholder={placeholderArr[index]}
+            placeholder={placeholders[index]}
           />
         ))}
       </InputFieldWrapper>
