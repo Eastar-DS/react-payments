@@ -1,11 +1,11 @@
 import styled from '@emotion/styled';
 import { useRef, useState } from 'react';
-import FormField from '../Common/Form/FormField';
+import InputField from '../Common/Field/InputField';
 import Label from '../Common/Label/Label';
 import ErrorMessage from '../Common/ErrorMessage/ErrorMessage';
 import { ValidatorResult } from '../../types';
 
-interface InputFieldFormProps {
+interface InputFieldGroupProps {
   id: string;
   label: string;
   placeholderArr: readonly string[];
@@ -16,7 +16,7 @@ interface InputFieldFormProps {
   onChange: (value: string, index: number) => void;
 }
 
-export default function InputFieldForm({
+export default function InputFieldGroup({
   id,
   label,
   placeholderArr,
@@ -25,7 +25,7 @@ export default function InputFieldForm({
   inputType,
   validator,
   onChange,
-}: InputFieldFormProps) {
+}: InputFieldGroupProps) {
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
 
@@ -60,12 +60,12 @@ export default function InputFieldForm({
   };
 
   return (
-    <FormContainer>
+    <GroupContainer>
       <Label htmlFor={id}>{label}</Label>
 
       <InputFieldWrapper>
         {values.map((numbers, index) => (
-          <FormField
+          <InputField
             key={`${label}-${index}`}
             id={index === 0 ? id : String(index)}
             index={index}
@@ -85,11 +85,11 @@ export default function InputFieldForm({
       </InputFieldWrapper>
 
       {<ErrorMessage>{errorMessage.trim().length > 0 && errorMessage}</ErrorMessage>}
-    </FormContainer>
+    </GroupContainer>
   );
 }
 
-const FormContainer = styled.div`
+const GroupContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;

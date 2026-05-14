@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
-import SectionTitle from '../Common/SectionTitle/SectionTitle';
-import HintText from '../Common/HintText/HintText';
+import SectionTitle from '../SectionTitle/SectionTitle';
+import HintText from '../HintText/HintText';
 
-export default function InputFieldLayout({
+export default function FieldSection({
   sectionTitle,
   hintText,
   children,
@@ -12,17 +12,17 @@ export default function InputFieldLayout({
   children: React.ReactNode;
 }) {
   return (
-    <Layout>
+    <Section>
       <Header>
         <SectionTitle>{sectionTitle}</SectionTitle>
         {hintText ? <HintText>{hintText}</HintText> : null}
       </Header>
       <ContentWrapper>{children}</ContentWrapper>
-    </Layout>
+    </Section>
   );
 }
 
-const Layout = styled.section`
+const Section = styled.section`
   display: flex;
   flex-direction: column;
   gap: 16px;

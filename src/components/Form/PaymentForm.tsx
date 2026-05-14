@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import styled from '@emotion/styled';
 import CardPreview from '../CardPreview/CardPreview';
-import InputFieldLayout from '../Layout/InputFieldLayout';
+import FieldSection from '../Common/Section/FieldSection';
 import {
   makeCardNumbersValidator,
   makeCvcValidator,
@@ -9,7 +9,7 @@ import {
   passwordValidator,
 } from '../../utils/validate';
 
-import InputFieldForm from './InputFieldForm';
+import InputFieldGroup from './InputFieldGroup';
 import {
   INPUT_FIELD_CONFIG,
   KOREAN_CARD_COMPANIES,
@@ -31,7 +31,7 @@ import {
   isExpirationDateComplete,
   isPasswordComplete,
 } from '../../utils/formStatus';
-import CardCompanyFieldForm from './CardCompanyFieldForm';
+import CardCompanyField from './CardCompanyField';
 import { useNavigate } from 'react-router';
 import SubmitButton from '../Common/Button/SubmitButton';
 
@@ -108,11 +108,11 @@ export default function PaymentForm() {
         backgroundColor={previewBackgroundColor}
       />
       {showPassword && (
-        <InputFieldLayout
+        <FieldSection
           sectionTitle={INPUT_FIELD_CONFIG['PASSWORD'].sectionTitle}
           hintText={INPUT_FIELD_CONFIG['PASSWORD'].hintText}
         >
-          <InputFieldForm
+          <InputFieldGroup
             id="password"
             label={INPUT_FIELD_CONFIG['PASSWORD'].label}
             placeholderArr={INPUT_FIELD_CONFIG['PASSWORD'].placeholder}
@@ -122,12 +122,12 @@ export default function PaymentForm() {
             onChange={handlePasswordChange}
             inputType="password"
           />
-        </InputFieldLayout>
+        </FieldSection>
       )}
 
       {showCvc && (
-        <InputFieldLayout sectionTitle={INPUT_FIELD_CONFIG['CVC'].sectionTitle}>
-          <InputFieldForm
+        <FieldSection sectionTitle={INPUT_FIELD_CONFIG['CVC'].sectionTitle}>
+          <InputFieldGroup
             id="cvc"
             label={INPUT_FIELD_CONFIG['CVC'].label}
             placeholderArr={INPUT_FIELD_CONFIG['CVC'].placeholder}
@@ -136,15 +136,15 @@ export default function PaymentForm() {
             validator={makeCvcValidator(cardBrand)}
             onChange={handleCvcChange}
           />
-        </InputFieldLayout>
+        </FieldSection>
       )}
 
       {showExpiration && (
-        <InputFieldLayout
+        <FieldSection
           sectionTitle={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].sectionTitle}
           hintText={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].hintText}
         >
-          <InputFieldForm
+          <InputFieldGroup
             id="expirationDate"
             label={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].label}
             placeholderArr={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].placeholder}
@@ -153,26 +153,26 @@ export default function PaymentForm() {
             validator={makeExpirationDateValidator(expirationDate)}
             onChange={handleExpirationDateChange}
           />
-        </InputFieldLayout>
+        </FieldSection>
       )}
 
       {showCardCompany && (
-        <InputFieldLayout sectionTitle={INPUT_FIELD_CONFIG['CARD_COMPANY'].sectionTitle}>
-          <CardCompanyFieldForm
+        <FieldSection sectionTitle={INPUT_FIELD_CONFIG['CARD_COMPANY'].sectionTitle}>
+          <CardCompanyField
             id="cardCompany"
             label={INPUT_FIELD_CONFIG['CARD_COMPANY'].label}
             placeholder={INPUT_FIELD_CONFIG['CARD_COMPANY'].placeholder[0]}
             value={cardCompany}
             onChange={handleCardCompanyChange}
           />
-        </InputFieldLayout>
+        </FieldSection>
       )}
 
-      <InputFieldLayout
+      <FieldSection
         sectionTitle={INPUT_FIELD_CONFIG['CARD_NUMBERS'].sectionTitle}
         hintText={INPUT_FIELD_CONFIG['CARD_NUMBERS'].hintText}
       >
-        <InputFieldForm
+        <InputFieldGroup
           id="cardNumbers"
           label={INPUT_FIELD_CONFIG['CARD_NUMBERS'].label}
           placeholderArr={INPUT_FIELD_CONFIG['CARD_NUMBERS'].placeholder}
@@ -181,7 +181,7 @@ export default function PaymentForm() {
           validator={makeCardNumbersValidator(cardNumbers, segmentLengths)}
           onChange={handleSegmentChange}
         />
-      </InputFieldLayout>
+      </FieldSection>
 
       {isFormValid && (
         <SubmitButtonContainer>

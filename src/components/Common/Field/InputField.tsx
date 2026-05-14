@@ -1,11 +1,11 @@
 import { ChangeEvent } from 'react';
 import styled from '@emotion/styled';
-import InputField from '../InputField/InputField';
+import Input from '../Input/Input';
 import { validateNaN } from '../../../utils/validate';
 import { ValidationResult, ValidatorResult } from '../../../types';
 import { ERROR_MESSAGE } from '../../../constants';
 
-interface FormFieldProps {
+interface InputFieldProps {
   id: string;
   index: number;
   numbers: string;
@@ -19,7 +19,7 @@ interface FormFieldProps {
   onBlur: () => void;
 }
 
-export default function FormField({
+export default function InputField({
   id,
   index,
   numbers,
@@ -31,7 +31,7 @@ export default function FormField({
   onChange,
   onFocus,
   onBlur,
-}: FormFieldProps) {
+}: InputFieldProps) {
   const isError = numbers.length > 0 && validator(numbers, index).error;
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -48,8 +48,8 @@ export default function FormField({
   };
 
   return (
-    <FormFieldContainer>
-      <InputField
+    <InputFieldContainer>
+      <Input
         isError={isError}
         id={index === 0 ? id : String(index)}
         type={inputType}
@@ -63,11 +63,11 @@ export default function FormField({
         onFocus={onFocus}
         onBlur={onBlur}
       />
-    </FormFieldContainer>
+    </InputFieldContainer>
   );
 }
 
-const FormFieldContainer = styled.div`
+const InputFieldContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;

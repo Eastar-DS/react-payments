@@ -3,11 +3,11 @@ import { userEvent, within } from 'storybook/test';
 
 import { fn } from 'storybook/test';
 
-import InputField from './InputField';
+import Input from './Input';
 
 const meta = {
-  title: 'InputField',
-  component: InputField,
+  title: 'Input',
+  component: Input,
   parameters: {
     layout: 'centered',
     docs: {
@@ -32,7 +32,7 @@ const meta = {
   },
 
   args: { onClick: fn(), placeholder: '카드 번호를 입력해주세요' },
-} satisfies Meta<typeof InputField>;
+} satisfies Meta<typeof Input>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
