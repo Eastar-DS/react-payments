@@ -13,7 +13,8 @@ export default function CompletePage() {
   const location = useLocation();
   const state = location.state as CompletePageState | null;
 
-  if (!state) return <Navigate to={ROUTES.HOME} replace />;
+  if (!state?.cardCompanyName || !state?.cardNumberPrefix)
+    return <Navigate to={ROUTES.HOME} replace />;
   return (
     <Wrapper>
       <CheckIcon>✓</CheckIcon>
