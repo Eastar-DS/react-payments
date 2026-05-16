@@ -2,11 +2,7 @@ import { useState } from 'react';
 import styled from '@emotion/styled';
 import CardPreview from '../CardPreview/CardPreview';
 import FieldSection from '../Common/Section/FieldSection';
-import {
-  makeCvcValidator,
-  makeExpirationDateValidator,
-  passwordValidator,
-} from '../../utils/validate';
+import { makeCvcValidator, passwordValidator } from '../../utils/validate';
 
 import InputFieldGroup from './InputFieldGroup';
 import {
@@ -15,47 +11,34 @@ import {
   ROUTES,
   VALIDATION_RULE,
 } from '../../constants';
-import { ExpirationDate, KoreanCardCompany } from '../../types';
+import { KoreanCardCompany } from '../../types';
 import { getCvcLength } from '../../utils/cardBrand';
-import {
-  isCvcComplete,
-  isExpirationDateComplete,
-  isPasswordComplete,
-} from '../../utils/formStatus';
+import { isCvcComplete, isPasswordComplete } from '../../utils/formStatus';
 import CardCompanyField from './CardCompanyField';
 import { useNavigate } from 'react-router';
 import SubmitButton from '../Common/Button/SubmitButton';
 import useCardNumbers from '../../hooks/useCardNumbers';
+import useExpirationDate from '../../hooks/useExpirationDate';
 
 export default function PaymentForm() {
   const navigate = useNavigate();
-  const cardNumber = useCardNumbers();
+  const cardNumbers = useCardNumbers();
   const [cardCompany, setCardCompany] = useState<KoreanCardCompany | null>(null);
-  const [expirationDate, setExpirationDate] = useState<ExpirationDate>({ month: '', year: '' });
+  const expirationDate = useExpirationDate();
   const [cvc, setCvc] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
   const previewBackgroundColor = cardCompany ? KOREAN_CARD_COMPANIES[cardCompany].color : '#333333';
 
-  const showCardCompany = cardNumber.isComplete;
+  const showCardCompany = cardNumbers.isComplete;
   const showExpiration = showCardCompany && cardCompany !== null;
-  const showCvc = showExpiration && isExpirationDateComplete(expirationDate);
-  const showPassword = showCvc && isCvcComplete(cvc, cardNumber.cardBrand);
+  const showCvc = showExpiration && expirationDate.isComplete;
+  const showPassword = showCvc && isCvcComplete(cvc, cardNumbers.cardBrand);
 
   const isFormValid = showPassword && isPasswordComplete(password);
 
   const handleCardCompanyChange = (value: KoreanCardCompany) => {
     setCardCompany(value);
-  };
-
-  const handleExpirationDateChange = (value: string, index: number) => {
-    const key = index === 0 ? 'month' : 'year';
-
-    setExpirationDate((prev) => {
-      const newExpirationDate = { ...prev };
-      newExpirationDate[key] = value;
-      return newExpirationDate;
-    });
   };
 
   const handleCvcChange = (value: string) => {
@@ -70,7 +53,7 @@ export default function PaymentForm() {
     if (!isFormValid || !cardCompany) return;
     navigate(ROUTES.COMPLETE, {
       state: {
-        cardNumberPrefix: cardNumber.cardNumbers[0],
+        cardNumberPrefix: cardNumbers.value[0],
         cardCompanyName: KOREAN_CARD_COMPANIES[cardCompany].label,
       },
     });
@@ -79,9 +62,9 @@ export default function PaymentForm() {
   return (
     <FormContainer>
       <CardPreview
-        cardBrand={cardNumber.cardBrand}
-        cardNumbers={cardNumber.cardNumbers}
-        expirationDate={`${expirationDate['month']}/${expirationDate['year']}`}
+        cardBrand={cardNumbers.cardBrand}
+        cardNumbers={cardNumbers.value}
+        expirationDate={`${expirationDate.value.month}/${expirationDate.value.year}`}
         backgroundColor={previewBackgroundColor}
       />
       {showPassword && (
@@ -108,9 +91,9 @@ export default function PaymentForm() {
             id="cvc"
             label={INPUT_FIELD_CONFIG['CVC'].label}
             placeholders={INPUT_FIELD_CONFIG['CVC'].placeholder}
-            fieldMaxLengths={[getCvcLength(cardNumber.cardBrand)]}
+            fieldMaxLengths={[getCvcLength(cardNumbers.cardBrand)]}
             values={[cvc]}
-            validator={makeCvcValidator(cardNumber.cardBrand)}
+            validator={makeCvcValidator(cardNumbers.cardBrand)}
             onChange={handleCvcChange}
           />
         </FieldSection>
@@ -126,9 +109,9 @@ export default function PaymentForm() {
             label={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].label}
             placeholders={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].placeholder}
             fieldMaxLengths={[2, 2]}
-            values={[expirationDate.month, expirationDate.year]}
-            validator={makeExpirationDateValidator(expirationDate)}
-            onChange={handleExpirationDateChange}
+            values={expirationDate.expirationDateSegments}
+            validator={expirationDate.validator}
+            onChange={expirationDate.handleSegmentChange}
           />
         </FieldSection>
       )}
@@ -153,10 +136,10 @@ export default function PaymentForm() {
           id="cardNumbers"
           label={INPUT_FIELD_CONFIG['CARD_NUMBERS'].label}
           placeholders={INPUT_FIELD_CONFIG['CARD_NUMBERS'].placeholder}
-          fieldMaxLengths={cardNumber.segmentLengths}
-          values={cardNumber.cardNumbers}
-          validator={cardNumber.validator}
-          onChange={cardNumber.handleSegmentChange}
+          fieldMaxLengths={cardNumbers.segmentLengths}
+          values={cardNumbers.value}
+          validator={cardNumbers.validator}
+          onChange={cardNumbers.handleSegmentChange}
         />
       </FieldSection>
 

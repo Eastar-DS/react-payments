@@ -11,7 +11,7 @@ import { isCardNumbersComplete } from '../utils/formStatus';
 import { makeCardNumbersValidator } from '../utils/validate';
 
 export interface UseCardNumbersResult {
-  cardNumbers: CardNumbers;
+  value: CardNumbers;
   cardBrand: CardBrandOrNone;
   segmentLengths: readonly number[];
   isComplete: boolean;
@@ -20,15 +20,15 @@ export interface UseCardNumbersResult {
 }
 
 export default function useCardNumbers(): UseCardNumbersResult {
-  const [cardNumbers, setCardNumbers] = useState<CardNumbers>(['', '', '', '']);
+  const [value, setValue] = useState<CardNumbers>(['', '', '', '']);
 
-  const cardBrand = detectCardBrand(joinUntilEmpty(cardNumbers));
+  const cardBrand = detectCardBrand(joinUntilEmpty(value));
   const segmentLengths = getSegmentLengths(cardBrand);
-  const isComplete = isCardNumbersComplete(cardNumbers);
-  const validator = makeCardNumbersValidator(cardNumbers, segmentLengths);
+  const isComplete = isCardNumbersComplete(value);
+  const validator = makeCardNumbersValidator(value, segmentLengths);
 
-  const handleSegmentChange = (value: string, index: number) => {
-    const next = replaceSegmentAt(cardNumbers, index, value);
+  const handleSegmentChange = (inputValue: string, index: number) => {
+    const next = replaceSegmentAt(value, index, inputValue);
 
     const newBrand = detectCardBrand(joinUntilEmpty(next));
     const newSegmentLengths = getSegmentLengths(newBrand);
@@ -36,8 +36,8 @@ export default function useCardNumbers(): UseCardNumbersResult {
     const adjusted: CardNumbers =
       next.length === newSegmentLengths.length ? next : reshapeCardNumbers(next, newSegmentLengths);
 
-    setCardNumbers(adjusted);
+    setValue(adjusted);
   };
 
-  return { cardNumbers, cardBrand, segmentLengths, isComplete, validator, handleSegmentChange };
+  return { value, cardBrand, segmentLengths, isComplete, validator, handleSegmentChange };
 }
