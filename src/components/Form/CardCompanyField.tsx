@@ -4,7 +4,7 @@ import { KoreanCardCompany } from "../../types";
 import Label from '../Common/Label/Label';
 import styled from "@emotion/styled";
 
-interface CardCompanyFieldFormProps {
+interface CardCompanyFieldProps {
   id: string;
   label: string;
   placeholder: string;
@@ -16,13 +16,13 @@ const COMPANIES = Object.entries(KOREAN_CARD_COMPANIES) as Array<
   [KoreanCardCompany, { label: string; color: string }]
 >;
 
-export default function CardCompanyFieldForm({
+export default function CardCompanyField({
   id,
   label,
   placeholder,
   value,
   onChange,
-}: CardCompanyFieldFormProps) {
+}: CardCompanyFieldProps) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 

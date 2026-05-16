@@ -7,10 +7,10 @@ interface InputFieldProps extends ComponentProps<'input'> {
 }
 
 export default function InputField({ isError, ref, ...props }: InputFieldProps) {
-  return <Input ref={ref} $isError={isError} {...props} />;
+  return <BaseInput ref={ref} $isError={isError} {...props} />;
 }
 
-const Input = styled.input<{ $isError: boolean }>`
+const BaseInput = styled.input<{ $isError: boolean }>`
   width: clamp(72px, 100%, 100%);
   height: 32px;
   padding: 8px;

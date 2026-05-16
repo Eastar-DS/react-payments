@@ -4,14 +4,14 @@ import { BRAND_LOGO_MAP } from '../../constants';
 import { CardBrandOrNone, CardNumbers } from '../../types';
 
 interface CardPreviewProps {
-  cardNumberList: CardNumbers;
+  cardNumbers: CardNumbers;
   expirationDate: string;
   cardBrand: CardBrandOrNone;
   backgroundColor?: string;
 }
 
 export default function CardPreview({
-  cardNumberList,
+  cardNumbers,
   expirationDate,
   cardBrand,
   backgroundColor = '#333',
@@ -31,8 +31,8 @@ export default function CardPreview({
 
       <ContentWrapper>
         <CardNumberList>
-          {cardNumberList.map((numbers, index) => (
-            <CardNumbersSegment key={`cardNumbers-${index}`} numbers={numbers} index={index} />
+          {cardNumbers.map((segment, index) => (
+            <CardNumbersSegment key={`cardNumbers-${index}`} numbers={segment} index={index} />
           ))}
         </CardNumberList>
         <ExpirationDate>

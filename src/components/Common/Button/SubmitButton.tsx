@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { ComponentProps } from 'react';
 
 export default function SubmitButton(props: ComponentProps<'button'>) {
-  return <Button type="button" {...props} />;
+  return <Button type="submit" {...props} />;
 }
 
 const Button = styled.button`

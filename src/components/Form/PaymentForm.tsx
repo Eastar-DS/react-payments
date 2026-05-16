@@ -1,191 +1,151 @@
-import { useState } from 'react';
+import { SubmitEvent, useState } from 'react';
 import styled from '@emotion/styled';
 import CardPreview from '../CardPreview/CardPreview';
-import InputFieldLayout from '../Layout/InputFieldLayout';
-import {
-  makeCardNumbersValidator,
-  makeCvcValidator,
-  makeExpirationDateValidator,
-  passwordValidator,
-} from '../../utils/validate';
+import FieldSection from '../Common/Section/FieldSection';
+import { passwordValidator } from '../../utils/validate';
 
-import InputFieldForm from './InputFieldForm';
+import InputFieldGroup from './InputFieldGroup';
 import {
   INPUT_FIELD_CONFIG,
   KOREAN_CARD_COMPANIES,
   ROUTES,
   VALIDATION_RULE,
 } from '../../constants';
-import { CardNumbers, ExpirationDate, KoreanCardCompany } from '../../types';
-import {
-  detectCardBrand,
-  getCvcLength,
-  getSegmentLengths,
-  joinUntilEmpty,
-  replaceSegmentAt,
-  reshapeCardNumbers,
-} from '../../utils/cardBrand';
-import {
-  isCardNumbersComplete,
-  isCvcComplete,
-  isExpirationDateComplete,
-  isPasswordComplete,
-} from '../../utils/formStatus';
-import CardCompanyFieldForm from './CardCompanyFieldForm';
+import { KoreanCardCompany } from '../../types';
+import { isCardCompanyComplete, isPasswordComplete } from '../../utils/formStatus';
+import CardCompanyField from './CardCompanyField';
 import { useNavigate } from 'react-router';
 import SubmitButton from '../Common/Button/SubmitButton';
+import useCardNumbers from '../../hooks/useCardNumbers';
+import useExpirationDate from '../../hooks/useExpirationDate';
+import useCvc from '../../hooks/useCvc';
 
 export default function PaymentForm() {
   const navigate = useNavigate();
-  const [cardNumbers, setCardNumbers] = useState<CardNumbers>(['', '', '', '']);
+  const cardNumbers = useCardNumbers();
   const [cardCompany, setCardCompany] = useState<KoreanCardCompany | null>(null);
-  const [expirationDate, setExpirationDate] = useState<ExpirationDate>({ month: '', year: '' });
-  const [cvc, setCvc] = useState<string>('');
+  const expirationDate = useExpirationDate();
+  const cvc = useCvc(cardNumbers.cardBrand);
   const [password, setPassword] = useState<string>('');
-
-  const cardBrand = detectCardBrand(joinUntilEmpty(cardNumbers));
-  const segmentLengths = getSegmentLengths(cardBrand);
 
   const previewBackgroundColor = cardCompany ? KOREAN_CARD_COMPANIES[cardCompany].color : '#333333';
 
-  const showCardCompany = isCardNumbersComplete(cardNumbers);
-  const showExpiration = showCardCompany && cardCompany !== null;
-  const showCvc = showExpiration && isExpirationDateComplete(expirationDate);
-  const showPassword = showCvc && isCvcComplete(cvc, cardBrand);
+  const showCardCompany = cardNumbers.isComplete;
+  const showExpiration = showCardCompany && isCardCompanyComplete(cardCompany);
+  const showCvc = showExpiration && expirationDate.isComplete;
+  const showPassword = showCvc && cvc.isComplete;
 
   const isFormValid = showPassword && isPasswordComplete(password);
 
-  const handleSegmentChange = (value: string, index: number) => {
-    const next = replaceSegmentAt(cardNumbers, index, value);
-
-    const newBrand = detectCardBrand(joinUntilEmpty(next));
-    const newSegmentLengths = getSegmentLengths(newBrand);
-
-    const adjusted: CardNumbers =
-      next.length === newSegmentLengths.length ? next : reshapeCardNumbers(next, newSegmentLengths);
-
-    setCardNumbers(adjusted);
-  };
-
   const handleCardCompanyChange = (value: KoreanCardCompany) => {
     setCardCompany(value);
-  };
-
-  const handleExpirationDateChange = (value: string, index: number) => {
-    const key = index === 0 ? 'month' : 'year';
-
-    setExpirationDate((prev) => {
-      const newExpirationDate = { ...prev };
-      newExpirationDate[key] = value;
-      return newExpirationDate;
-    });
-  };
-
-  const handleCvcChange = (value: string) => {
-    setCvc(value);
   };
 
   const handlePasswordChange = (value: string) => {
     setPassword(value);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e: SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (!isFormValid || !cardCompany) return;
     navigate(ROUTES.COMPLETE, {
       state: {
-        cardNumberPrefix: cardNumbers[0],
+        cardNumberPrefix: cardNumbers.value[0],
         cardCompanyName: KOREAN_CARD_COMPANIES[cardCompany].label,
       },
     });
   };
 
   return (
-    <FormContainer>
+    <FormContainer onSubmit={handleSubmit}>
       <CardPreview
-        cardBrand={cardBrand}
-        cardNumberList={cardNumbers}
-        expirationDate={`${expirationDate['month']}/${expirationDate['year']}`}
+        cardBrand={cardNumbers.cardBrand}
+        cardNumbers={cardNumbers.value}
+        expirationDate={`${expirationDate.value.month}/${expirationDate.value.year}`}
         backgroundColor={previewBackgroundColor}
       />
-      {showPassword && (
-        <InputFieldLayout
-          sectionTitle={INPUT_FIELD_CONFIG['PASSWORD'].sectionTitle}
-          hintText={INPUT_FIELD_CONFIG['PASSWORD'].hintText}
+
+      <SectionsContainer>
+        <FieldSection
+          sectionTitle={INPUT_FIELD_CONFIG['CARD_NUMBERS'].sectionTitle}
+          hintText={INPUT_FIELD_CONFIG['CARD_NUMBERS'].hintText}
         >
-          <InputFieldForm
-            id="password"
-            label={INPUT_FIELD_CONFIG['PASSWORD'].label}
-            placeholderArr={INPUT_FIELD_CONFIG['PASSWORD'].placeholder}
-            fieldMaxLengths={[VALIDATION_RULE.PASSWORD_LENGTH]}
-            values={[password]}
-            validator={passwordValidator}
-            onChange={handlePasswordChange}
-            inputType="password"
+          <InputFieldGroup
+            id="cardNumbers"
+            label={INPUT_FIELD_CONFIG['CARD_NUMBERS'].label}
+            placeholders={INPUT_FIELD_CONFIG['CARD_NUMBERS'].placeholder}
+            fieldMaxLengths={cardNumbers.segmentLengths}
+            values={cardNumbers.value}
+            validator={cardNumbers.validator}
+            onChange={cardNumbers.handleSegmentChange}
           />
-        </InputFieldLayout>
-      )}
+        </FieldSection>
 
-      {showCvc && (
-        <InputFieldLayout sectionTitle={INPUT_FIELD_CONFIG['CVC'].sectionTitle}>
-          <InputFieldForm
-            id="cvc"
-            label={INPUT_FIELD_CONFIG['CVC'].label}
-            placeholderArr={INPUT_FIELD_CONFIG['CVC'].placeholder}
-            fieldMaxLengths={[getCvcLength(cardBrand)]}
-            values={[cvc]}
-            validator={makeCvcValidator(cardBrand)}
-            onChange={handleCvcChange}
-          />
-        </InputFieldLayout>
-      )}
+        {showCardCompany && (
+          <FieldSection sectionTitle={INPUT_FIELD_CONFIG['CARD_COMPANY'].sectionTitle}>
+            <CardCompanyField
+              id="cardCompany"
+              label={INPUT_FIELD_CONFIG['CARD_COMPANY'].label}
+              placeholder={INPUT_FIELD_CONFIG['CARD_COMPANY'].placeholder[0]}
+              value={cardCompany}
+              onChange={handleCardCompanyChange}
+            />
+          </FieldSection>
+        )}
 
-      {showExpiration && (
-        <InputFieldLayout
-          sectionTitle={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].sectionTitle}
-          hintText={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].hintText}
-        >
-          <InputFieldForm
-            id="expirationDate"
-            label={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].label}
-            placeholderArr={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].placeholder}
-            fieldMaxLengths={[2, 2]}
-            values={[expirationDate.month, expirationDate.year]}
-            validator={makeExpirationDateValidator(expirationDate)}
-            onChange={handleExpirationDateChange}
-          />
-        </InputFieldLayout>
-      )}
+        {showExpiration && (
+          <FieldSection
+            sectionTitle={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].sectionTitle}
+            hintText={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].hintText}
+          >
+            <InputFieldGroup
+              id="expirationDate"
+              label={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].label}
+              placeholders={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].placeholder}
+              fieldMaxLengths={[2, 2]}
+              values={expirationDate.expirationDateSegments}
+              validator={expirationDate.validator}
+              onChange={expirationDate.handleSegmentChange}
+            />
+          </FieldSection>
+        )}
 
-      {showCardCompany && (
-        <InputFieldLayout sectionTitle={INPUT_FIELD_CONFIG['CARD_COMPANY'].sectionTitle}>
-          <CardCompanyFieldForm
-            id="cardCompany"
-            label={INPUT_FIELD_CONFIG['CARD_COMPANY'].label}
-            placeholder={INPUT_FIELD_CONFIG['CARD_COMPANY'].placeholder[0]}
-            value={cardCompany}
-            onChange={handleCardCompanyChange}
-          />
-        </InputFieldLayout>
-      )}
+        {showCvc && (
+          <FieldSection sectionTitle={INPUT_FIELD_CONFIG['CVC'].sectionTitle}>
+            <InputFieldGroup
+              id="cvc"
+              label={INPUT_FIELD_CONFIG['CVC'].label}
+              placeholders={INPUT_FIELD_CONFIG['CVC'].placeholder}
+              fieldMaxLengths={[cvc.maxLength]}
+              values={[cvc.value]}
+              validator={cvc.validator}
+              onChange={cvc.handleChange}
+            />
+          </FieldSection>
+        )}
 
-      <InputFieldLayout
-        sectionTitle={INPUT_FIELD_CONFIG['CARD_NUMBERS'].sectionTitle}
-        hintText={INPUT_FIELD_CONFIG['CARD_NUMBERS'].hintText}
-      >
-        <InputFieldForm
-          id="cardNumbers"
-          label={INPUT_FIELD_CONFIG['CARD_NUMBERS'].label}
-          placeholderArr={INPUT_FIELD_CONFIG['CARD_NUMBERS'].placeholder}
-          fieldMaxLengths={segmentLengths}
-          values={cardNumbers}
-          validator={makeCardNumbersValidator(cardNumbers, segmentLengths)}
-          onChange={handleSegmentChange}
-        />
-      </InputFieldLayout>
+        {showPassword && (
+          <FieldSection
+            sectionTitle={INPUT_FIELD_CONFIG['PASSWORD'].sectionTitle}
+            hintText={INPUT_FIELD_CONFIG['PASSWORD'].hintText}
+          >
+            <InputFieldGroup
+              id="password"
+              label={INPUT_FIELD_CONFIG['PASSWORD'].label}
+              placeholders={INPUT_FIELD_CONFIG['PASSWORD'].placeholder}
+              fieldMaxLengths={[VALIDATION_RULE.PASSWORD_LENGTH]}
+              values={[password]}
+              validator={passwordValidator}
+              onChange={handlePasswordChange}
+              inputType="password"
+            />
+          </FieldSection>
+        )}
+      </SectionsContainer>
 
       {isFormValid && (
         <SubmitButtonContainer>
-          <SubmitButton disabled={!isFormValid} onClick={handleSubmit}>
+          <SubmitButton disabled={!isFormValid}>
             확인
           </SubmitButton>
         </SubmitButtonContainer>
@@ -193,6 +153,14 @@ export default function PaymentForm() {
     </FormContainer>
   );
 }
+
+const SectionsContainer = styled.div`
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 45px;
+  width: 100%;
+`;
 
 const FormContainer = styled.form`
   display: flex;
