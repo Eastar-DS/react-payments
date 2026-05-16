@@ -57,7 +57,7 @@ npm run dev
 - [x] 비밀번호 입력 섹션 추가
 - [x] 제출 버튼 추가
 - [x] 제출 이후 페이지 이동(Routing 추가)
-- [ ] Custom Hook 도입
+- [X] Custom Hook 도입
 
 ## 기능 명세
 
