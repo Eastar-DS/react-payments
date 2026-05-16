@@ -13,7 +13,7 @@ import {
 } from '../../constants';
 import { KoreanCardCompany } from '../../types';
 import { getCvcLength } from '../../utils/cardBrand';
-import { isCvcComplete, isPasswordComplete } from '../../utils/formStatus';
+import { isCardCompanyComplete, isCvcComplete, isPasswordComplete } from '../../utils/formStatus';
 import CardCompanyField from './CardCompanyField';
 import { useNavigate } from 'react-router';
 import SubmitButton from '../Common/Button/SubmitButton';
@@ -31,7 +31,7 @@ export default function PaymentForm() {
   const previewBackgroundColor = cardCompany ? KOREAN_CARD_COMPANIES[cardCompany].color : '#333333';
 
   const showCardCompany = cardNumbers.isComplete;
-  const showExpiration = showCardCompany && cardCompany !== null;
+  const showExpiration = showCardCompany && isCardCompanyComplete(cardCompany);
   const showCvc = showExpiration && expirationDate.isComplete;
   const showPassword = showCvc && isCvcComplete(cvc, cardNumbers.cardBrand);
 
