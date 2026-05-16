@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { SubmitEvent, useState } from 'react';
 import styled from '@emotion/styled';
 import CardPreview from '../CardPreview/CardPreview';
 import FieldSection from '../Common/Section/FieldSection';
@@ -45,7 +45,8 @@ export default function PaymentForm() {
     setPassword(value);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e: SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (!isFormValid || !cardCompany) return;
     navigate(ROUTES.COMPLETE, {
       state: {
@@ -56,7 +57,7 @@ export default function PaymentForm() {
   };
 
   return (
-    <FormContainer>
+    <FormContainer onSubmit={handleSubmit}>
       <CardPreview
         cardBrand={cardNumbers.cardBrand}
         cardNumbers={cardNumbers.value}
@@ -144,7 +145,7 @@ export default function PaymentForm() {
 
       {isFormValid && (
         <SubmitButtonContainer>
-          <SubmitButton disabled={!isFormValid} onClick={handleSubmit}>
+          <SubmitButton disabled={!isFormValid}>
             확인
           </SubmitButton>
         </SubmitButtonContainer>
