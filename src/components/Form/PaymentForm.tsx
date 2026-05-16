@@ -63,81 +63,84 @@ export default function PaymentForm() {
         expirationDate={`${expirationDate.value.month}/${expirationDate.value.year}`}
         backgroundColor={previewBackgroundColor}
       />
-      {showPassword && (
+
+      <SectionsContainer>
         <FieldSection
-          sectionTitle={INPUT_FIELD_CONFIG['PASSWORD'].sectionTitle}
-          hintText={INPUT_FIELD_CONFIG['PASSWORD'].hintText}
+          sectionTitle={INPUT_FIELD_CONFIG['CARD_NUMBERS'].sectionTitle}
+          hintText={INPUT_FIELD_CONFIG['CARD_NUMBERS'].hintText}
         >
           <InputFieldGroup
-            id="password"
-            label={INPUT_FIELD_CONFIG['PASSWORD'].label}
-            placeholders={INPUT_FIELD_CONFIG['PASSWORD'].placeholder}
-            fieldMaxLengths={[VALIDATION_RULE.PASSWORD_LENGTH]}
-            values={[password]}
-            validator={passwordValidator}
-            onChange={handlePasswordChange}
-            inputType="password"
+            id="cardNumbers"
+            label={INPUT_FIELD_CONFIG['CARD_NUMBERS'].label}
+            placeholders={INPUT_FIELD_CONFIG['CARD_NUMBERS'].placeholder}
+            fieldMaxLengths={cardNumbers.segmentLengths}
+            values={cardNumbers.value}
+            validator={cardNumbers.validator}
+            onChange={cardNumbers.handleSegmentChange}
           />
         </FieldSection>
-      )}
 
-      {showCvc && (
-        <FieldSection sectionTitle={INPUT_FIELD_CONFIG['CVC'].sectionTitle}>
-          <InputFieldGroup
-            id="cvc"
-            label={INPUT_FIELD_CONFIG['CVC'].label}
-            placeholders={INPUT_FIELD_CONFIG['CVC'].placeholder}
-            fieldMaxLengths={[cvc.maxLength]}
-            values={[cvc.value]}
-            validator={cvc.validator}
-            onChange={cvc.handleChange}
-          />
-        </FieldSection>
-      )}
+        {showCardCompany && (
+          <FieldSection sectionTitle={INPUT_FIELD_CONFIG['CARD_COMPANY'].sectionTitle}>
+            <CardCompanyField
+              id="cardCompany"
+              label={INPUT_FIELD_CONFIG['CARD_COMPANY'].label}
+              placeholder={INPUT_FIELD_CONFIG['CARD_COMPANY'].placeholder[0]}
+              value={cardCompany}
+              onChange={handleCardCompanyChange}
+            />
+          </FieldSection>
+        )}
 
-      {showExpiration && (
-        <FieldSection
-          sectionTitle={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].sectionTitle}
-          hintText={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].hintText}
-        >
-          <InputFieldGroup
-            id="expirationDate"
-            label={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].label}
-            placeholders={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].placeholder}
-            fieldMaxLengths={[2, 2]}
-            values={expirationDate.expirationDateSegments}
-            validator={expirationDate.validator}
-            onChange={expirationDate.handleSegmentChange}
-          />
-        </FieldSection>
-      )}
+        {showExpiration && (
+          <FieldSection
+            sectionTitle={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].sectionTitle}
+            hintText={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].hintText}
+          >
+            <InputFieldGroup
+              id="expirationDate"
+              label={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].label}
+              placeholders={INPUT_FIELD_CONFIG['EXPIRATION_DATE'].placeholder}
+              fieldMaxLengths={[2, 2]}
+              values={expirationDate.expirationDateSegments}
+              validator={expirationDate.validator}
+              onChange={expirationDate.handleSegmentChange}
+            />
+          </FieldSection>
+        )}
 
-      {showCardCompany && (
-        <FieldSection sectionTitle={INPUT_FIELD_CONFIG['CARD_COMPANY'].sectionTitle}>
-          <CardCompanyField
-            id="cardCompany"
-            label={INPUT_FIELD_CONFIG['CARD_COMPANY'].label}
-            placeholder={INPUT_FIELD_CONFIG['CARD_COMPANY'].placeholder[0]}
-            value={cardCompany}
-            onChange={handleCardCompanyChange}
-          />
-        </FieldSection>
-      )}
+        {showCvc && (
+          <FieldSection sectionTitle={INPUT_FIELD_CONFIG['CVC'].sectionTitle}>
+            <InputFieldGroup
+              id="cvc"
+              label={INPUT_FIELD_CONFIG['CVC'].label}
+              placeholders={INPUT_FIELD_CONFIG['CVC'].placeholder}
+              fieldMaxLengths={[cvc.maxLength]}
+              values={[cvc.value]}
+              validator={cvc.validator}
+              onChange={cvc.handleChange}
+            />
+          </FieldSection>
+        )}
 
-      <FieldSection
-        sectionTitle={INPUT_FIELD_CONFIG['CARD_NUMBERS'].sectionTitle}
-        hintText={INPUT_FIELD_CONFIG['CARD_NUMBERS'].hintText}
-      >
-        <InputFieldGroup
-          id="cardNumbers"
-          label={INPUT_FIELD_CONFIG['CARD_NUMBERS'].label}
-          placeholders={INPUT_FIELD_CONFIG['CARD_NUMBERS'].placeholder}
-          fieldMaxLengths={cardNumbers.segmentLengths}
-          values={cardNumbers.value}
-          validator={cardNumbers.validator}
-          onChange={cardNumbers.handleSegmentChange}
-        />
-      </FieldSection>
+        {showPassword && (
+          <FieldSection
+            sectionTitle={INPUT_FIELD_CONFIG['PASSWORD'].sectionTitle}
+            hintText={INPUT_FIELD_CONFIG['PASSWORD'].hintText}
+          >
+            <InputFieldGroup
+              id="password"
+              label={INPUT_FIELD_CONFIG['PASSWORD'].label}
+              placeholders={INPUT_FIELD_CONFIG['PASSWORD'].placeholder}
+              fieldMaxLengths={[VALIDATION_RULE.PASSWORD_LENGTH]}
+              values={[password]}
+              validator={passwordValidator}
+              onChange={handlePasswordChange}
+              inputType="password"
+            />
+          </FieldSection>
+        )}
+      </SectionsContainer>
 
       {isFormValid && (
         <SubmitButtonContainer>
@@ -149,6 +152,14 @@ export default function PaymentForm() {
     </FormContainer>
   );
 }
+
+const SectionsContainer = styled.div`
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 45px;
+  width: 100%;
+`;
 
 const FormContainer = styled.form`
   display: flex;
