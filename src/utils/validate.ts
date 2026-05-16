@@ -2,8 +2,7 @@ import { ERROR_MESSAGE, VALIDATION_RULE } from '../constants';
 import { CardBrandOrNone, CardNumbers, ExpirationDate, ValidatorResult } from '../types';
 import { detectCardBrand, getCvcLength, joinUntilEmpty } from './cardBrand';
 
-// 숫자 외의 값이 입력되는 경우 검증
-export const validateNaN = (inputValue: string) => isNaN(Number(inputValue));
+export const isNonDigit = (value: string) => /\D/.test(value);
 
 export const makeCardNumbersValidator = (
   cardNumbers: CardNumbers,
@@ -49,7 +48,7 @@ export const isExpirationDateInFuture = ({ month, year }: ExpirationDate): boole
 };
 
 const validateExpirationField = (value: string, index: number): ValidatorResult => {
-  if (validateNaN(value)) {
+  if (isNonDigit(value)) {
     return { error: true, errorMessage: ERROR_MESSAGE.NAN };
   }
   if (value.length > VALIDATION_RULE.EXPIRATION_DATE_LENGTH) {
@@ -89,7 +88,7 @@ export const makeExpirationDateValidator =
 export const makeCvcValidator =
   (cardBrand: CardBrandOrNone) =>
   (value: string): ValidatorResult => {
-    if (validateNaN(value)) {
+    if (isNonDigit(value)) {
       return { error: true, errorMessage: ERROR_MESSAGE.NAN };
     }
     const cvcLength = getCvcLength(cardBrand);
@@ -101,7 +100,7 @@ export const makeCvcValidator =
 
 // 비밀번호
 export const passwordValidator = (inputValue: string): ValidatorResult => {
-  if (validateNaN(inputValue)) {
+  if (isNonDigit(inputValue)) {
     return { error: true, errorMessage: ERROR_MESSAGE.NAN };
   }
   // 길이는 input maxLength로 차단 — 안전망

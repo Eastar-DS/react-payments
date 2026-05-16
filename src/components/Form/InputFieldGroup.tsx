@@ -4,7 +4,7 @@ import InputField from '../Common/InputField/InputField';
 import Label from '../Common/Label/Label';
 import ErrorMessage from '../Common/ErrorMessage/ErrorMessage';
 import { ValidatorResult } from '../../types';
-import { validateNaN } from '../../utils/validate';
+import { isNonDigit } from '../../utils/validate';
 
 interface InputFieldGroupProps {
   id: string;
@@ -45,7 +45,7 @@ export default function InputFieldGroup({
 
   const handleInputFieldChange = (index: number) => (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    if (validateNaN(value)) return;
+    if (isNonDigit(value)) return;
     onChange(value, index);
     focusNextField(value, index);
   };
