@@ -1,9 +1,10 @@
 import styled from '@emotion/styled';
-import { useRef, useState } from 'react';
-import InputField from '../Common/Field/InputField';
+import { ChangeEvent, useRef, useState } from 'react';
+import InputField from '../Common/InputField/InputField';
 import Label from '../Common/Label/Label';
 import ErrorMessage from '../Common/ErrorMessage/ErrorMessage';
 import { ValidatorResult } from '../../types';
+import { validateNaN } from '../../utils/validate';
 
 interface InputFieldGroupProps {
   id: string;
@@ -22,7 +23,7 @@ export default function InputFieldGroup({
   placeholders,
   fieldMaxLengths,
   values,
-  inputType,
+  inputType = 'text',
   validator,
   onChange,
 }: InputFieldGroupProps) {
@@ -32,6 +33,8 @@ export default function InputFieldGroup({
   const errorMessage =
     focusedIndex !== null ? validator(values[focusedIndex], focusedIndex).errorMessage : '';
 
+  const isErrors = values.map((value, index) => value.length > 0 && validator(value, index).error);
+
   const focusNextField = (value: string, currentIndex: number) => {
     const isFilled = value.length === fieldMaxLengths[currentIndex];
     const hasNext = currentIndex < values.length - 1;
@@ -40,24 +43,15 @@ export default function InputFieldGroup({
     }
   };
 
-  const handleFieldChange = (
-    value: string,
-    index: number,
-    validation: { error: boolean; errorMessage: string; block: boolean }
-  ) => {
-    if (validation.block) return;
-
+  const handleInputFieldChange = (index: number) => (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (validateNaN(value)) return;
     onChange(value, index);
     focusNextField(value, index);
   };
 
-  const handleFocus = (index: number) => {
-    setFocusedIndex(index);
-  };
-
-  const handleBlur = () => {
-    setFocusedIndex(null);
-  };
+  const handleFocus = (index: number) => () => setFocusedIndex(index);
+  const handleBlur = () => setFocusedIndex(null);
 
   return (
     <GroupContainer>
@@ -67,24 +61,25 @@ export default function InputFieldGroup({
         {values.map((value, index) => (
           <InputField
             key={`${label}-${index}`}
-            id={index === 0 ? id : String(index)}
-            index={index}
-            value={value}
-            fieldMaxLength={fieldMaxLengths[index]}
-            inputType={inputType}
-            inputRef={(el) => {
+            id={index === 0 ? id : `${id}-${index}`}
+            isError={isErrors[index]}
+            type={inputType}
+            maxLength={fieldMaxLengths[index]}
+            inputMode="numeric"
+            autoComplete="off"
+            ref={(el) => {
               inputRefs.current[index] = el;
             }}
-            validator={validator}
-            onChange={handleFieldChange}
-            onFocus={() => handleFocus(index)}
-            onBlur={handleBlur}
+            value={value}
             placeholder={placeholders[index]}
+            onChange={handleInputFieldChange(index)}
+            onFocus={handleFocus(index)}
+            onBlur={handleBlur}
           />
         ))}
       </InputFieldWrapper>
 
-      {<ErrorMessage>{errorMessage.trim().length > 0 && errorMessage}</ErrorMessage>}
+      <ErrorMessage>{errorMessage.trim().length > 0 && errorMessage}</ErrorMessage>
     </GroupContainer>
   );
 }

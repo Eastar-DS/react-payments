@@ -3,16 +3,16 @@ import { userEvent, within } from 'storybook/test';
 
 import { fn } from 'storybook/test';
 
-import Input from './Input';
+import InputField from './InputField';
 
 const meta = {
-  title: 'Input',
-  component: Input,
+  title: 'InputField',
+  component: InputField,
   parameters: {
     layout: 'centered',
     docs: {
       description: {
-        component: '카드 정보를 입력받는 공용 Input 컴포넌트입니다.',
+        component: '카드 정보를 입력받는 공용 InputField 컴포넌트입니다. DOM input wrapper로 isError prop만 받아 표시합니다.',
       },
     },
   },
@@ -32,7 +32,7 @@ const meta = {
   },
 
   args: { onClick: fn(), placeholder: '카드 번호를 입력해주세요' },
-} satisfies Meta<typeof Input>;
+} satisfies Meta<typeof InputField>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

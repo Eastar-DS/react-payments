@@ -1,12 +1,12 @@
 import { ComponentProps, Ref } from 'react';
 import styled from '@emotion/styled';
 
-interface InputProps extends ComponentProps<'input'> {
+interface InputFieldProps extends ComponentProps<'input'> {
   isError: boolean;
   ref?: Ref<HTMLInputElement>;
 }
 
-export default function Input({ isError, ref, ...props }: InputProps) {
+export default function InputField({ isError, ref, ...props }: InputFieldProps) {
   return <BaseInput ref={ref} $isError={isError} {...props} />;
 }
 
