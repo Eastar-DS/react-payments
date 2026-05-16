@@ -2,7 +2,7 @@ import { useState } from 'react';
 import styled from '@emotion/styled';
 import CardPreview from '../CardPreview/CardPreview';
 import FieldSection from '../Common/Section/FieldSection';
-import { makeCvcValidator, passwordValidator } from '../../utils/validate';
+import { passwordValidator } from '../../utils/validate';
 
 import InputFieldGroup from './InputFieldGroup';
 import {
@@ -12,20 +12,20 @@ import {
   VALIDATION_RULE,
 } from '../../constants';
 import { KoreanCardCompany } from '../../types';
-import { getCvcLength } from '../../utils/cardBrand';
-import { isCardCompanyComplete, isCvcComplete, isPasswordComplete } from '../../utils/formStatus';
+import { isCardCompanyComplete, isPasswordComplete } from '../../utils/formStatus';
 import CardCompanyField from './CardCompanyField';
 import { useNavigate } from 'react-router';
 import SubmitButton from '../Common/Button/SubmitButton';
 import useCardNumbers from '../../hooks/useCardNumbers';
 import useExpirationDate from '../../hooks/useExpirationDate';
+import useCvc from '../../hooks/useCvc';
 
 export default function PaymentForm() {
   const navigate = useNavigate();
   const cardNumbers = useCardNumbers();
   const [cardCompany, setCardCompany] = useState<KoreanCardCompany | null>(null);
   const expirationDate = useExpirationDate();
-  const [cvc, setCvc] = useState<string>('');
+  const cvc = useCvc(cardNumbers.cardBrand);
   const [password, setPassword] = useState<string>('');
 
   const previewBackgroundColor = cardCompany ? KOREAN_CARD_COMPANIES[cardCompany].color : '#333333';
@@ -33,16 +33,12 @@ export default function PaymentForm() {
   const showCardCompany = cardNumbers.isComplete;
   const showExpiration = showCardCompany && isCardCompanyComplete(cardCompany);
   const showCvc = showExpiration && expirationDate.isComplete;
-  const showPassword = showCvc && isCvcComplete(cvc, cardNumbers.cardBrand);
+  const showPassword = showCvc && cvc.isComplete;
 
   const isFormValid = showPassword && isPasswordComplete(password);
 
   const handleCardCompanyChange = (value: KoreanCardCompany) => {
     setCardCompany(value);
-  };
-
-  const handleCvcChange = (value: string) => {
-    setCvc(value);
   };
 
   const handlePasswordChange = (value: string) => {
@@ -91,10 +87,10 @@ export default function PaymentForm() {
             id="cvc"
             label={INPUT_FIELD_CONFIG['CVC'].label}
             placeholders={INPUT_FIELD_CONFIG['CVC'].placeholder}
-            fieldMaxLengths={[getCvcLength(cardNumbers.cardBrand)]}
-            values={[cvc]}
-            validator={makeCvcValidator(cardNumbers.cardBrand)}
-            onChange={handleCvcChange}
+            fieldMaxLengths={[cvc.maxLength]}
+            values={[cvc.value]}
+            validator={cvc.validator}
+            onChange={cvc.handleChange}
           />
         </FieldSection>
       )}

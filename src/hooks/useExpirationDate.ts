@@ -7,8 +7,8 @@ interface UseExpirationDateResult {
   value: ExpirationDate;
   expirationDateSegments: ExpirationDateSegments;
   isComplete: boolean;
-  validator: (value: string, index: number) => ValidatorResult;
-  handleSegmentChange: (value: string, index: number) => void;
+  validator: (inputValue: string, index: number) => ValidatorResult;
+  handleSegmentChange: (inputValue: string, index: number) => void;
 }
 
 export default function useExpirationDate(): UseExpirationDateResult {
@@ -17,12 +17,12 @@ export default function useExpirationDate(): UseExpirationDateResult {
   const isComplete = isExpirationDateComplete(value);
   const validator = makeExpirationDateValidator(value);
 
-  const handleSegmentChange = (value: string, index: number) => {
+  const handleSegmentChange = (inputValue: string, index: number) => {
     const key = index === 0 ? 'month' : 'year';
 
     setValue((prev) => {
       const newExpirationDate = { ...prev };
-      newExpirationDate[key] = value;
+      newExpirationDate[key] = inputValue;
       return newExpirationDate;
     });
   };

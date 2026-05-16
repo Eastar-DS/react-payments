@@ -15,8 +15,8 @@ export interface UseCardNumbersResult {
   cardBrand: CardBrandOrNone;
   segmentLengths: readonly number[];
   isComplete: boolean;
-  validator: (value: string, index: number) => ValidatorResult;
-  handleSegmentChange: (value: string, index: number) => void;
+  validator: (inputValue: string, index: number) => ValidatorResult;
+  handleSegmentChange: (inputValue: string, index: number) => void;
 }
 
 export default function useCardNumbers(): UseCardNumbersResult {
