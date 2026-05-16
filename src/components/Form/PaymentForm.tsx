@@ -3,7 +3,6 @@ import styled from '@emotion/styled';
 import CardPreview from '../CardPreview/CardPreview';
 import FieldSection from '../Common/Section/FieldSection';
 import {
-  makeCardNumbersValidator,
   makeCvcValidator,
   makeExpirationDateValidator,
   passwordValidator,
@@ -16,17 +15,9 @@ import {
   ROUTES,
   VALIDATION_RULE,
 } from '../../constants';
-import { CardNumbers, ExpirationDate, KoreanCardCompany } from '../../types';
+import { ExpirationDate, KoreanCardCompany } from '../../types';
+import { getCvcLength } from '../../utils/cardBrand';
 import {
-  detectCardBrand,
-  getCvcLength,
-  getSegmentLengths,
-  joinUntilEmpty,
-  replaceSegmentAt,
-  reshapeCardNumbers,
-} from '../../utils/cardBrand';
-import {
-  isCardNumbersComplete,
   isCvcComplete,
   isExpirationDateComplete,
   isPasswordComplete,
@@ -34,38 +25,24 @@ import {
 import CardCompanyField from './CardCompanyField';
 import { useNavigate } from 'react-router';
 import SubmitButton from '../Common/Button/SubmitButton';
+import useCardNumbers from '../../hooks/useCardNumbers';
 
 export default function PaymentForm() {
   const navigate = useNavigate();
-  const [cardNumbers, setCardNumbers] = useState<CardNumbers>(['', '', '', '']);
+  const cardNumber = useCardNumbers();
   const [cardCompany, setCardCompany] = useState<KoreanCardCompany | null>(null);
   const [expirationDate, setExpirationDate] = useState<ExpirationDate>({ month: '', year: '' });
   const [cvc, setCvc] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
-  const cardBrand = detectCardBrand(joinUntilEmpty(cardNumbers));
-  const segmentLengths = getSegmentLengths(cardBrand);
-
   const previewBackgroundColor = cardCompany ? KOREAN_CARD_COMPANIES[cardCompany].color : '#333333';
 
-  const showCardCompany = isCardNumbersComplete(cardNumbers);
+  const showCardCompany = cardNumber.isComplete;
   const showExpiration = showCardCompany && cardCompany !== null;
   const showCvc = showExpiration && isExpirationDateComplete(expirationDate);
-  const showPassword = showCvc && isCvcComplete(cvc, cardBrand);
+  const showPassword = showCvc && isCvcComplete(cvc, cardNumber.cardBrand);
 
   const isFormValid = showPassword && isPasswordComplete(password);
-
-  const handleSegmentChange = (value: string, index: number) => {
-    const next = replaceSegmentAt(cardNumbers, index, value);
-
-    const newBrand = detectCardBrand(joinUntilEmpty(next));
-    const newSegmentLengths = getSegmentLengths(newBrand);
-
-    const adjusted: CardNumbers =
-      next.length === newSegmentLengths.length ? next : reshapeCardNumbers(next, newSegmentLengths);
-
-    setCardNumbers(adjusted);
-  };
 
   const handleCardCompanyChange = (value: KoreanCardCompany) => {
     setCardCompany(value);
@@ -93,7 +70,7 @@ export default function PaymentForm() {
     if (!isFormValid || !cardCompany) return;
     navigate(ROUTES.COMPLETE, {
       state: {
-        cardNumberPrefix: cardNumbers[0],
+        cardNumberPrefix: cardNumber.cardNumbers[0],
         cardCompanyName: KOREAN_CARD_COMPANIES[cardCompany].label,
       },
     });
@@ -102,8 +79,8 @@ export default function PaymentForm() {
   return (
     <FormContainer>
       <CardPreview
-        cardBrand={cardBrand}
-        cardNumbers={cardNumbers}
+        cardBrand={cardNumber.cardBrand}
+        cardNumbers={cardNumber.cardNumbers}
         expirationDate={`${expirationDate['month']}/${expirationDate['year']}`}
         backgroundColor={previewBackgroundColor}
       />
@@ -131,9 +108,9 @@ export default function PaymentForm() {
             id="cvc"
             label={INPUT_FIELD_CONFIG['CVC'].label}
             placeholders={INPUT_FIELD_CONFIG['CVC'].placeholder}
-            fieldMaxLengths={[getCvcLength(cardBrand)]}
+            fieldMaxLengths={[getCvcLength(cardNumber.cardBrand)]}
             values={[cvc]}
-            validator={makeCvcValidator(cardBrand)}
+            validator={makeCvcValidator(cardNumber.cardBrand)}
             onChange={handleCvcChange}
           />
         </FieldSection>
@@ -176,10 +153,10 @@ export default function PaymentForm() {
           id="cardNumbers"
           label={INPUT_FIELD_CONFIG['CARD_NUMBERS'].label}
           placeholders={INPUT_FIELD_CONFIG['CARD_NUMBERS'].placeholder}
-          fieldMaxLengths={segmentLengths}
-          values={cardNumbers}
-          validator={makeCardNumbersValidator(cardNumbers, segmentLengths)}
-          onChange={handleSegmentChange}
+          fieldMaxLengths={cardNumber.segmentLengths}
+          values={cardNumber.cardNumbers}
+          validator={cardNumber.validator}
+          onChange={cardNumber.handleSegmentChange}
         />
       </FieldSection>
 
