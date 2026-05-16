@@ -1,10 +1,10 @@
 import styled from '@emotion/styled';
-import { ChangeEvent, useRef, useState } from 'react';
 import InputField from '../Common/InputField/InputField';
 import Label from '../Common/Label/Label';
 import ErrorMessage from '../Common/ErrorMessage/ErrorMessage';
 import { ValidatorResult } from '../../types';
 import { isNonDigit } from '../../utils/validate';
+import useInputFieldGroup from '../../hooks/useInputFieldGroup';
 
 interface InputFieldGroupProps {
   id: string;
@@ -15,6 +15,7 @@ interface InputFieldGroupProps {
   inputType?: 'text' | 'password';
   validator: (inputValue: string, index: number) => ValidatorResult;
   onChange: (value: string, index: number) => void;
+  inputBlocker?: (value: string) => boolean;
 }
 
 export default function InputFieldGroup({
@@ -26,32 +27,9 @@ export default function InputFieldGroup({
   inputType = 'text',
   validator,
   onChange,
+  inputBlocker = isNonDigit,
 }: InputFieldGroupProps) {
-  const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
-  const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
-
-  const errorMessage =
-    focusedIndex !== null ? validator(values[focusedIndex], focusedIndex).errorMessage : '';
-
-  const isErrors = values.map((value, index) => value.length > 0 && validator(value, index).error);
-
-  const focusNextField = (value: string, currentIndex: number) => {
-    const isFilled = value.length === fieldMaxLengths[currentIndex];
-    const hasNext = currentIndex < values.length - 1;
-    if (isFilled && hasNext) {
-      inputRefs.current[currentIndex + 1]?.focus();
-    }
-  };
-
-  const handleInputFieldChange = (index: number) => (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (isNonDigit(value)) return;
-    onChange(value, index);
-    focusNextField(value, index);
-  };
-
-  const handleFocus = (index: number) => () => setFocusedIndex(index);
-  const handleBlur = () => setFocusedIndex(null);
+  const { errorMessage, isErrors, refCallback, handleInputFieldChange, handleFocus, handleBlur } = useInputFieldGroup({values, fieldMaxLengths, validator, onChange, inputBlocker});
 
   return (
     <GroupContainer>
@@ -67,13 +45,11 @@ export default function InputFieldGroup({
             maxLength={fieldMaxLengths[index]}
             inputMode="numeric"
             autoComplete="off"
-            ref={(el) => {
-              inputRefs.current[index] = el;
-            }}
+            ref={(el) => refCallback(el,index)}
             value={value}
             placeholder={placeholders[index]}
-            onChange={handleInputFieldChange(index)}
-            onFocus={handleFocus(index)}
+            onChange={(e) => handleInputFieldChange(e.target.value, index)}
+            onFocus={() => handleFocus(index)}
             onBlur={handleBlur}
           />
         ))}
