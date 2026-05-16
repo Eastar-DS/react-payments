@@ -21,7 +21,7 @@ export type KoreanCardCompany =
   | 'KB';
 
 export type ExpirationDate = { month: string; year: string };
-export type ExpirationDateList = [string, string];
+export type ExpirationDateSegments = [string, string];
 
 export interface InputFieldConfig {
   sectionTitle: string;
