@@ -20,7 +20,7 @@ import useCardNumbers from '../../hooks/useCardNumbers';
 import useExpirationDate from '../../hooks/useExpirationDate';
 import useCvc from '../../hooks/useCvc';
 
-export default function PaymentForm() {
+export default function CardRegistrationForm() {
   const navigate = useNavigate();
   const cardNumbers = useCardNumbers();
   const [cardCompany, setCardCompany] = useState<KoreanCardCompany | null>(null);

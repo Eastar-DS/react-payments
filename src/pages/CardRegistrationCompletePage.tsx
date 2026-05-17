@@ -3,15 +3,15 @@ import { ROUTES } from '../constants';
 import styled from '@emotion/styled';
 import SubmitButton from '../components/Common/Button/SubmitButton';
 
-interface CompletePageState {
+interface CardRegistrationCompletePageState {
   cardNumberPrefix: string;
   cardCompanyName: string;
 }
 
-export default function CompletePage() {
+export default function CardRegistrationCompletePage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const state = location.state as CompletePageState | null;
+  const state = location.state as CardRegistrationCompletePageState | null;
 
   if (!state?.cardCompanyName || !state?.cardNumberPrefix)
     return <Navigate to={ROUTES.HOME} replace />;
