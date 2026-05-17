@@ -1,10 +1,5 @@
 import { http, HttpResponse } from 'msw';
-interface Card {
-  id: string;
-  issuerCode: string;
-  number: string;
-  expirationDate: string;
-}
+import { Card } from '../types';
 
 let cards: Card[] = [];
 
