@@ -23,3 +23,8 @@ export const postCard = async (body: CreateCardRequest): Promise<{ id: string }>
 
   return res.json();
 };
+
+export const deleteCard = async (id: string): Promise<void> => {
+  const res = await fetch(`/cards/${id}`, { method: 'DELETE' });
+  if (!res.ok) throw new Error('카드를 삭제하는데 실패했습니다.');
+};
