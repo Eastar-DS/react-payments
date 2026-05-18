@@ -23,7 +23,7 @@ export default function CardRegistrationCompletePage() {
         <br />
         {state.cardCompanyName}가 등록되었어요.
       </Message>
-      <SubmitButton onClick={() => navigate(ROUTES.HOME)}>확인</SubmitButton>
+      <SubmitButton onClick={() => navigate(ROUTES.CARDS)}>확인</SubmitButton>
     </Wrapper>
   );
 }

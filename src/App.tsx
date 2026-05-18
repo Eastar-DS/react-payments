@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router';
 import { ROUTES } from './constants';
 import CardRegistrationPage from './pages/CardRegistrationPage';
 import CardRegistrationCompletePage from './pages/CardRegistrationCompletePage';
+import CardListPage from './pages/CardListPage';
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
       <Routes>
         <Route path={ROUTES.HOME} element={<CardRegistrationPage />} />
         <Route path={ROUTES.COMPLETE} element={<CardRegistrationCompletePage />} />
+        <Route path={ROUTES.CARDS} element={<CardListPage />} />
       </Routes>
     </RootLayout>
   );
