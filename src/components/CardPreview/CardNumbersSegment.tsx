@@ -1,11 +1,11 @@
 import styled from '@emotion/styled';
 
-interface CardNumbersProps {
+interface CardNumbersSegmentProps {
   numbers: string;
   index: number;
 }
 
-export default function CardNumbers({ numbers, index }: CardNumbersProps) {
+export default function CardNumbersSegment({ numbers, index }: CardNumbersSegmentProps) {
   const isMasked = index > 1;
   const formattedNumbers = isMasked ? '•'.repeat(numbers.length) : numbers;
 

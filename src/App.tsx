@@ -1,10 +1,16 @@
 import styled from '@emotion/styled';
-import ServiceLayout from './components/Layout/ServiceLayout';
+import { Route, Routes } from 'react-router';
+import { ROUTES } from './constants';
+import PaymentPage from './pages/PaymentPage';
+import CompletePage from './pages/CompletePage';
 
 function App() {
   return (
     <RootLayout>
-      <ServiceLayout />
+      <Routes>
+        <Route path={ROUTES.HOME} element={<PaymentPage />} />
+        <Route path={ROUTES.COMPLETE} element={<CompletePage />} />
+      </Routes>
     </RootLayout>
   );
 }

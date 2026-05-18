@@ -1,6 +1,85 @@
+import type {
+  CardBrand,
+  CardBrandOrNone,
+  CardBrandRule,
+  InputFieldConfig,
+  KoreanCardCompany,
+} from '../types';
 import visaIcon from '../assets/visa.svg';
 import masterIcon from '../assets/mastercard.svg';
-import { InputFieldConfig } from '../types';
+import amexIcon from '../assets/american-express.svg';
+import dinersIcon from '../assets/diners-club.svg';
+import unionpayIcon from '../assets/china-unionpay.svg';
+
+export const CARD_BRAND_RULES: Record<CardBrand, CardBrandRule> = {
+  VISA: {
+    brand: 'VISA',
+    totalLength: 16,
+    segmentLengths: [4, 4, 4, 4],
+    cvcLength: 3,
+    label: 'Visa',
+  },
+  MASTER: {
+    brand: 'MASTER',
+    totalLength: 16,
+    segmentLengths: [4, 4, 4, 4],
+    cvcLength: 3,
+    label: 'MasterCard',
+  },
+  AMEX: {
+    brand: 'AMEX',
+    totalLength: 15,
+    segmentLengths: [4, 6, 5],
+    cvcLength: 4,
+    label: 'American Express',
+  },
+  DINERS: {
+    brand: 'DINERS',
+    totalLength: 14,
+    segmentLengths: [4, 6, 4],
+    cvcLength: 3,
+    label: 'Diners Club',
+  },
+  UNIONPAY: {
+    brand: 'UNIONPAY',
+    totalLength: 16,
+    segmentLengths: [4, 4, 4, 4],
+    cvcLength: 3,
+    label: 'UnionPay',
+  },
+} as const;
+
+export const BRAND_LOGO_MAP: Record<CardBrandOrNone, string> = {
+  VISA: visaIcon,
+  MASTER: masterIcon,
+  AMEX: amexIcon,
+  DINERS: dinersIcon,
+  UNIONPAY: unionpayIcon,
+  NONE: '',
+} as const;
+
+export const DEFAULT_SEGMENT_LENGTHS = [4, 4, 4, 4] as const;
+export const DEFAULT_CVC_LENGTH = 3 as const;
+
+export const KOREAN_CARD_COMPANIES: Record<KoreanCardCompany, { label: string; color: string }> = {
+  BC: { label: 'BC카드', color: '#F04651' },
+  SHINHAN: { label: '신한카드', color: '#0046FF' },
+  KAKAO_BANK: { label: '카카오뱅크', color: '#FFE600' },
+  HYUNDAI: { label: '현대카드', color: '#000000' },
+  WOORI: { label: '우리카드', color: '#007BC8' },
+  LOTTE: { label: '롯데카드', color: '#ED1C24' },
+  HANA: { label: '하나카드', color: '#009490' },
+  KB: { label: '국민카드', color: '#6A6056' },
+} as const;
+
+export const ERROR_MESSAGE = {
+  INVALID_CARD_BRAND_NUMBER: '유효한 카드 브랜드 번호를 입력해주세요.',
+  NAN: '숫자만 입력 가능합니다.',
+  MAX_LENGTH: (length: number) => `숫자는 ${length}자리를 입력해야 합니다.`,
+  INVALID_MONTH: '월은 1~12 사이의 숫자만 입력 가능합니다.',
+  INVALID_YEAR: '년도는 현재 년도 이상만 입력 가능합니다.',
+  INVALID_EXPIRATION_DATE: '유효기간은 현재 이후여야 합니다.',
+} as const;
 
 export const INPUT_FIELD_CONFIG: Record<string, InputFieldConfig> = {
   CARD_NUMBERS: {
@@ -20,38 +99,26 @@ export const INPUT_FIELD_CONFIG: Record<string, InputFieldConfig> = {
     label: 'CVC',
     placeholder: ['123'],
   },
-} as const;
-
-export const ERROR_MESSAGE = {
-  INVALID_CARD_BRAND_NUMBER: '유효한 카드 브랜드 번호를 입력해주세요.',
-  NAN: '숫자만 입력 가능합니다.',
-  MAX_LENGTH: (length: number) => `숫자는 ${length}자리를 입력해야 합니다.`,
-  INVALID_MONTH: '월은 1~12 사이의 숫자만 입력 가능합니다.',
-  INVALID_YEAR: '년도는 현재 년도 이상만 입력 가능합니다.',
-} as const;
-
-export const CARD_BRAND = { VISA: 'VISA', MASTER_CARD: 'MASTER' } as const;
-
-export const BRAND_ICON_MAP = {
-  VISA: visaIcon,
-  MASTER: masterIcon,
-  NONE: '',
-} as const;
-
-export const CARD_BRAND_RULE = {
-  VISA: {
-    PREFIX: '4',
+  PASSWORD: {
+    sectionTitle: '비밀번호를 입력해 주세요',
+    hintText: '앞의 2자리를 입력해주세요',
+    label: '비밀번호 앞 2자리',
+    placeholder: [''],
   },
-  MASTER_CARD: {
-    PREFIX_MIN: 51,
-    PREFIX_MAX: 55,
-    PREFIX_LENGTH: 2,
+  CARD_COMPANY: {
+    sectionTitle: '카드사를 선택해 주세요',
+    label: '카드사',
+    placeholder: ['카드사를 선택해주세요'],
   },
 } as const;
 
 export const VALIDATION_RULE = {
-  CARD_NUMBERS_LENGTH: 4,
   EXPIRATION_DATE_LENGTH: 2,
-  CVC_LENGTH: 3,
+  PASSWORD_LENGTH: 2,
   MAX_MONTH: 12,
+} as const;
+
+export const ROUTES = {
+  HOME: '/',
+  COMPLETE: '/complete',
 } as const;

@@ -12,7 +12,7 @@ const meta = {
     layout: 'centered',
     docs: {
       description: {
-        component: '카드 정보를 입력받는 공용 Input 컴포넌트입니다.',
+        component: '카드 정보를 입력받는 공용 InputField 컴포넌트입니다. DOM input wrapper로 isError prop만 받아 표시합니다.',
       },
     },
   },
