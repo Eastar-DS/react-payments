@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import getCards from '../api/cards';
+import { getCards } from '../api/cards';
 import styled from '@emotion/styled';
 import { Card } from '../types';
 import { ROUTES } from '../constants';
