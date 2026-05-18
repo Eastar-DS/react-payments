@@ -52,4 +52,9 @@ export const handlers = [
     cards.push(newCard);
     return HttpResponse.json({ id: newCard.id }, { status: 201 });
   }),
+
+  http.delete('/cards/:id', ({ params }) => {
+    cards = cards.filter((card) => card.id !== params.id);
+    return new HttpResponse(null, { status: 204 });
+  }),
 ];
