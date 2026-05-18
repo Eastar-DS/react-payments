@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { getCards } from '../api/cards';
 import styled from '@emotion/styled';
@@ -19,25 +19,27 @@ export default function CardListPage() {
   const navigate = useNavigate();
   const [fetchState, setFetchState] = useState<CardsFetchState>({ status: 'idle' });
 
-  useEffect(() => {
-    const controller = new AbortController();
-
-    const fetchData = async () => {
+  const fetchCards = useCallback(async (signal?: AbortSignal) => {
       setFetchState({ status: 'loading' });
       try {
-        const data = await getCards(controller.signal);
+        const data = await getCards(signal);
         setFetchState({ status: 'success', data: data });
       } catch (err) {
         const error = err as Error;
         if (error.name === 'AbortError') return;
         setFetchState({ status: 'error', error: error });
       }
-    };
+    }, []);
 
-    fetchData();
+  const refetch = () => fetchCards();
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    fetchCards(controller.signal);
 
     return () => controller.abort();
-  }, []);
+  }, [fetchCards]);
 
   const handleAddCard = () => navigate(ROUTES.HOME);
   return (
@@ -67,7 +69,7 @@ export default function CardListPage() {
         )}
 
         {fetchState.status === 'error' && (
-          <CardListError onRetry={() => window.location.reload()} />
+          <CardListError onRetry={refetch} />
         )}
       </Content>
     </PageContainer>
