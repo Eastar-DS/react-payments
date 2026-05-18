@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { getCards } from '../api/cards';
+import { deleteCard, getCards } from '../api/cards';
 import styled from '@emotion/styled';
 import { Card } from '../types';
 import { ROUTES } from '../constants';
@@ -20,16 +20,16 @@ export default function CardListPage() {
   const [fetchState, setFetchState] = useState<CardsFetchState>({ status: 'idle' });
 
   const fetchCards = useCallback(async (signal?: AbortSignal) => {
-      setFetchState({ status: 'loading' });
-      try {
-        const data = await getCards(signal);
-        setFetchState({ status: 'success', data: data });
-      } catch (err) {
-        const error = err as Error;
-        if (error.name === 'AbortError') return;
-        setFetchState({ status: 'error', error: error });
-      }
-    }, []);
+    setFetchState({ status: 'loading' });
+    try {
+      const data = await getCards(signal);
+      setFetchState({ status: 'success', data: data });
+    } catch (err) {
+      const error = err as Error;
+      if (error.name === 'AbortError') return;
+      setFetchState({ status: 'error', error: error });
+    }
+  }, []);
 
   const refetch = () => fetchCards();
 
@@ -42,6 +42,15 @@ export default function CardListPage() {
   }, [fetchCards]);
 
   const handleAddCard = () => navigate(ROUTES.HOME);
+
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteCard(id);
+      refetch();
+    } catch (err) {
+      console.log('삭제 실패', err);
+    }
+  };
   return (
     <PageContainer>
       <Header>
@@ -62,15 +71,13 @@ export default function CardListPage() {
         {fetchState.status === 'success' && fetchState.data.length > 0 && (
           <>
             {fetchState.data.map((card) => (
-              <CardRow key={card.id} card={card} />
+              <CardRow key={card.id} card={card} onDelete={handleDelete} />
             ))}
             <AddButton onClick={handleAddCard}>+ 카드 추가</AddButton>
           </>
         )}
 
-        {fetchState.status === 'error' && (
-          <CardListError onRetry={refetch} />
-        )}
+        {fetchState.status === 'error' && <CardListError onRetry={refetch} />}
       </Content>
     </PageContainer>
   );
