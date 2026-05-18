@@ -131,6 +131,5 @@ export const VALIDATION_RULE = {
 
 export const ROUTES = {
   HOME: '/',
-  COMPLETE: '/complete',
   CARDS: '/cards',
 } as const;
