@@ -5,10 +5,17 @@ import { formatMaskedCardNumber } from '../../utils/cardFormat';
 
 interface CardRowProps {
   card: Card;
+  onDelete: (id: string) => void;
 }
 
-export default function CardRow({ card }: CardRowProps) {
+export default function CardRow({ card, onDelete }: CardRowProps) {
   const company = getCompanyByIssuerCode(card.issuerCode);
+
+  const handleDelete = () => {
+    if (window.confirm('정말 삭제하시겠습니까?')) {
+      onDelete(card.id);
+    }
+  };
   return (
     <Row>
       <MiniCard $color={company.color} />
@@ -17,7 +24,9 @@ export default function CardRow({ card }: CardRowProps) {
         <Number>{formatMaskedCardNumber(card.number)}</Number>
         <Expiry>유효기간 {card.expirationDate}</Expiry>
       </Info>
-      <DeleteButton type="button" disabled>✕</DeleteButton>
+      <DeleteButton type="button" onClick={handleDelete}>
+        ✕
+      </DeleteButton>
     </Row>
   );
 }
