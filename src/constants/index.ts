@@ -133,3 +133,5 @@ export const ROUTES = {
   HOME: '/',
   CARDS: '/cards',
 } as const;
+
+export const BASE_PATH = import.meta.env.BASE_URL.replace(/\/$/, '');
