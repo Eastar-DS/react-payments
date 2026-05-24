@@ -1,6 +1,7 @@
 import { http, HttpResponse } from 'msw';
 import { ApiError, Card, CreateCardRequest } from '../types';
 import { detectCardBrand } from '../utils/cardBrand';
+import { BASE_PATH } from '../constants';
 
 let cards: Card[] = [];
 
@@ -30,11 +31,11 @@ const maskCardNumber = (cardNumber: string): string => {
 };
 
 export const handlers = [
-  http.get('/cards', () => {
+  http.get(`${BASE_PATH}/cards`, () => {
     return HttpResponse.json(cards);
   }),
 
-  http.post('/cards', async ({ request }) => {
+  http.post(`${BASE_PATH}/cards`, async ({ request }) => {
     const body = (await request.json()) as CreateCardRequest;
 
     const error = validateCreateCardRequest(body);
@@ -53,7 +54,7 @@ export const handlers = [
     return HttpResponse.json({ id: newCard.id }, { status: 201 });
   }),
 
-  http.delete('/cards/:id', ({ params }) => {
+  http.delete(`${BASE_PATH}/cards/:id`, ({ params }) => {
     cards = cards.filter((card) => card.id !== params.id);
     return new HttpResponse(null, { status: 204 });
   }),
