@@ -19,8 +19,8 @@ describe('카드 목록 페이지', () => {
       http.get('/cards', () =>
         HttpResponse.json([
           { id: '1', issuerCode: '31', number: '551112******9012', expirationDate: '12/28' },
-        ]),
-      ),
+        ])
+      )
     );
 
     renderWithRouter(<App />, { route: '/cards' });
@@ -48,7 +48,7 @@ describe('카드 목록 페이지', () => {
         callCount += 1;
         if (callCount === 1) return HttpResponse.error();
         return HttpResponse.json([]);
-      }),
+      })
     );
 
     renderWithRouter(<App />, { route: '/cards' });
@@ -70,14 +70,14 @@ describe('카드 목록 페이지', () => {
       http.delete('/cards/:id', ({ params }) => {
         cards = cards.filter((c) => c.id !== params.id);
         return new HttpResponse(null, { status: 204 });
-      }),
+      })
     );
 
     vi.spyOn(window, 'confirm').mockReturnValue(true);
 
     renderWithRouter(<App />, { route: '/cards' });
 
-    const deleteButton = await screen.findByRole('button', { name: '✕' });
+    const deleteButton = await screen.findByRole('button', { name: '카드 삭제' });
     await user.click(deleteButton);
 
     await waitFor(() => {
