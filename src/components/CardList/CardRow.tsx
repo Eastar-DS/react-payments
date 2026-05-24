@@ -24,7 +24,7 @@ export default function CardRow({ card, onDelete }: CardRowProps) {
         <Number>{formatMaskedCardNumber(card.number)}</Number>
         <Expiry>유효기간 {card.expirationDate}</Expiry>
       </Info>
-      <DeleteButton type="button" onClick={handleDelete}>
+      <DeleteButton type="button" onClick={handleDelete} aria-label="카드 삭제">
         ✕
       </DeleteButton>
     </Row>
